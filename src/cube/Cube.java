@@ -28,6 +28,8 @@ public class Cube implements Cloneable{
 	 *                   444
 	 *                   444
 	 */
+	
+	//Test #2
 	private int [][][] cube = new int[6][3][3];
 
 	private int leftColor , frontColor , rightColor , backColor , topColor , bottomColor = 0;
