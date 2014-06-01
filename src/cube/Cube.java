@@ -7,7 +7,7 @@ import android.util.Log;
 
 
 public class Cube implements Cloneable{
-	//TESTING ADDING STUFF
+	//time to eat food
 	// private int [][] Left = new int[3][3]; //face value = 0
 	// private int [][] Front = new int[3][3]; //face value = 1
 	// private int [][] Right = new int[3][3]; //face value = 2
