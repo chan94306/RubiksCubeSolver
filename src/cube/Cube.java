@@ -7,7 +7,6 @@ import android.util.Log;
 
 
 public class Cube implements Cloneable{
-	//time to eat food
 	// private int [][] Left = new int[3][3]; //face value = 0
 	// private int [][] Front = new int[3][3]; //face value = 1
 	// private int [][] Right = new int[3][3]; //face value = 2
@@ -15,6 +14,8 @@ public class Cube implements Cloneable{
 	// private int [][] Bottom = new int[3][3]; //face value = 4
 	// private int [][] Top = new int[3][3]; //face value = 5
 	// private int [][][] cube = {Left, Front, Right, Back, Bottom, Top};
+	// Test #3
+	
 	/*
 	 *            Cube Layout
 	 *
