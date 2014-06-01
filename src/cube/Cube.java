@@ -14,7 +14,6 @@ public class Cube implements Cloneable{
 	// private int [][] Bottom = new int[3][3]; //face value = 4
 	// private int [][] Top = new int[3][3]; //face value = 5
 	// private int [][][] cube = {Left, Front, Right, Back, Bottom, Top};
-	// Test #3
 	
 	/*
 	 *            Cube Layout
@@ -30,7 +29,6 @@ public class Cube implements Cloneable{
 	 *                   444
 	 */
 	
-	//Test #2
 	private int [][][] cube = new int[6][3][3];
 
 	private int leftColor , frontColor , rightColor , backColor , topColor , bottomColor = 0;
@@ -897,7 +895,16 @@ public class Cube implements Cloneable{
 		else return 88;
 	}
 
-	//Only works for top layer
+	/**
+	 * Checks to see if two colors are on the same edge piece, when specified a specific square on the cube.
+	 * Only works for the top layer (face 5) and edges on the front layer.
+	 * @param face integer value 0 through 5 of the face the square is on
+	 * @param i integer value, 0 through 2, [i][j] of a 2D array (y value)
+	 * @param j integer value, 0 through 2, [i][j] of a 2D array (x value)
+	 * @param colorA integer value 0 through 5 of one of the colors on the edge piece.
+	 * @param colorB integer value 0 through 5 of the other color on the edge piece.
+	 * @return true if the two specified colors are on the edge piece indicated, false otherwise.
+	 */
 	public boolean areComplementaryCornerColors(int face, int i, int j, int colorA, int colorB){
 		int[] Colors = new int[2];
 		//Assuming face 4 on the top face
@@ -966,7 +973,11 @@ public class Cube implements Cloneable{
 		else return false;
 
 	}
-
+	
+	/**
+	 * Checks if the newly read cube is valid (has 9 of each color)
+	 * @return true if the cube has 9 of each color, false otherwise
+	 */
 	public boolean isValidCube(){
 		int[] bins = new int[6];
 		for(int f = 0; f<6; f++){
@@ -983,6 +994,7 @@ public class Cube implements Cloneable{
 		return true;
 		
 	}
+	
 	public void printCube(){
 		for(int i = 0; i<3; i++){
 			System. out.println(" " + cube[5][i][0]+"" +cube [5][i][1]+""+ cube[5][i][2]);
