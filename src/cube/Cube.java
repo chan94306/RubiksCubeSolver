@@ -728,10 +728,10 @@ public class Cube implements Cloneable{
 
 	public int numFirstLayerCornersCorrect(){
 		int counter = 0;
-		if(cube [0][2][2] == 0 && cube[1][2][0] == 1 && cube[4][0][0] == 4) counter++;
-		if(cube [1][2][2] == 1 && cube[2][2][0] == 2 && cube[4][0][2] == 4) counter++;
-		if(cube [2][2][2] == 2 && cube[3][2][0] == 3 && cube[4][2][2] == 4) counter++;
-		if(cube [3][2][2] == 3 && cube[0][2][0] == 0 && cube[4][2][0] == 4) counter++;
+		if(cube [0][2][2] == cube[0][1][1] && cube[1][2][0] == cube[1][1][1] && cube[4][0][0] == 4) counter++;
+		if(cube [1][2][2] == cube[1][1][1] && cube[2][2][0] == cube[2][1][1] && cube[4][0][2] == 4) counter++;
+		if(cube [2][2][2] == cube[2][1][1] && cube[3][2][0] == cube[3][1][1] && cube[4][2][2] == 4) counter++;
+		if(cube [3][2][2] == cube[3][1][1] && cube[0][2][0] == cube[0][1][1] && cube[4][2][0] == 4) counter++;
 		return counter;
 	}
 
@@ -746,10 +746,10 @@ public class Cube implements Cloneable{
 
 	public boolean isFirstLayerCrossSolved(){
 		int counter = 0;
-		if(cube [4][0][1] == 4) counter++;
-		if(cube [4][1][0] == 4) counter++;
-		if(cube [4][1][2] == 4) counter++;
-		if(cube [4][2][1] == 4) counter++;
+		if(cube [4][0][1] == 4 && cube[1][2][1] == cube[1][1][1]) counter++;
+		if(cube [4][1][0] == 4 && cube[0][2][1] == cube[0][1][1]) counter++;
+		if(cube [4][1][2] == 4 && cube[2][2][1] == cube[2][1][1]) counter++;
+		if(cube [4][2][1] == 4 && cube[3][2][1] == cube[3][1][1]) counter++;
 		return (counter==4);
 	}
 
@@ -758,7 +758,7 @@ public class Cube implements Cloneable{
 	}
 
 	public boolean isFirstLayerEdgesEasilyAvailable(){
-		if(countSquaresOnFace(4, 5) > 1) return true;
+		if(cube[5][0][1] == 4 || cube[5][1][0] == 4 || cube[5][1][2] == 4 || cube[5][2][1] == 4) return true;
 		if(cube[0][1][2] == 4 || cube[2][1][0] == 4) return true;
 		// 	for(int i = 0; i <3; i++){
 		// 	if(cube[i][1][0] == 4 || cube[i][1][2] == 4) return true;
@@ -889,6 +889,8 @@ public class Cube implements Cloneable{
 		if(face == 1 && i == 1 && j == 0) return cube[0][1][1];
 		if(face == 1 && i == 1 && j == 2) return cube[2][1][1];
 		if(face == 1 && i == 0 && j == 1) return cube[5][2][1];
+
+		
 
 
 
