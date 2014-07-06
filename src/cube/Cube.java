@@ -754,7 +754,7 @@ public class Cube implements Cloneable{
 	}
 
 	public boolean isFirstLayerEdgeCorrect(){
-		return (cube[4][0][1] == 4);
+		return (cube[4][0][1] == 4 && cube[1][2][1] == 1);
 	}
 
 	public boolean isFirstLayerEdgesEasilyAvailable(){
@@ -763,7 +763,7 @@ public class Cube implements Cloneable{
 		// 	for(int i = 0; i <3; i++){
 		// 	if(cube[i][1][0] == 4 || cube[i][1][2] == 4) return true;
 		// }
-		return false;		
+		else return false;		
 
 	}
 

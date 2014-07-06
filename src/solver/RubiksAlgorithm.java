@@ -433,21 +433,21 @@ public class RubiksAlgorithm extends AsyncTask<String, Integer, Void> {
 		while(!current.isFirstLayerCrossSolved()){
 			if(!current.isFirstLayerEdgeCorrect() && current.isFirstLayerEdgesEasilyAvailable()){
 				notifyMainThreadDialog("first layer edges easily available");
-				if(current.getSquare(5,2,1) == 4 && current.getComplementaryEdgeColor(5,2,1) == 1){
+				if(current.getSquare(5,2,1) == 4 && current.getComplementaryEdgeColor(5,2,1) == current.getSquare(1,1,1)){
 					solveStep(1, CW);
 					solveStep(1, CW);
 				}
-				else if(current.getSquare(5,1,0) == 4 && current.getComplementaryEdgeColor(5,1,0) == 1){
+				else if(current.getSquare(5,1,0) == 4 && current.getComplementaryEdgeColor(5,1,0) == current.getSquare(1,1,1)){
 					solveStep(5, CCW);
 					solveStep(1, CW);
 					solveStep(1, CW);
 				}
-				else if(current.getSquare(5,1,2) == 4 && current.getComplementaryEdgeColor(5,1,2) == 1){
+				else if(current.getSquare(5,1,2) == 4 && current.getComplementaryEdgeColor(5,1,2) == current.getSquare(1,1,1)){
 					solveStep(5, CW);
 					solveStep(1, CW);
 					solveStep(1, CW);
 				}
-				else if(current.getSquare(5,0,1) == 4 && current.getComplementaryEdgeColor(5,0,1) == 1){
+				else if(current.getSquare(5,0,1) == 4 && current.getComplementaryEdgeColor(5,0,1) == current.getSquare(1,1,1)		){
 					solveStep(5, CW);
 					solveStep(5, CW);
 					solveStep(1, CW);
@@ -460,8 +460,10 @@ public class RubiksAlgorithm extends AsyncTask<String, Integer, Void> {
 				else if(current.getSquare(1,1,2) == 1 && current.getComplementaryEdgeColor(1,1,2) == 4){
 					solveStep(1, CW);
 				}
-				else notifyMainThreadDialog("edges easily available but nothing moved in");
+				//else notifyMainThreadDialog("edges easily available but nothing moved in");
+				//else solveStep(CW);
 			} //end isEasilyAvailable
+			
 
 			if(!current.isFirstLayerEdgesEasilyAvailable() && !current.isFirstLayerCrossSolved()){
 				notifyMainThreadDialog("no first layer cross pieces easily available");
