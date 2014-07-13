@@ -15,14 +15,13 @@ import android.widget.Toast;
 public class DrawOnTop extends View {
 	/////
 	private Paint[][] paintGrid = new Paint[3][3];
-	private int phase = 0; 								// 0: reading cube colors; 1: giving directions to solve cube
 //	private boolean captureButton = false, continueButton = false;
 	private final int MARGIN = 10;
 	@SuppressLint("UseSparseArrays")
 	private HashMap<Integer, Integer> colorMap = new HashMap<Integer, Integer>();
 
 
-	private Cube current, future;
+	private Cube current;
 
 	///// get rid of some of these later
 	public Bitmap mBitmap;
@@ -40,11 +39,10 @@ public class DrawOnTop extends View {
 
 	private Context context;
 
-	public DrawOnTop(Context context, Cube current, Cube future) {
+	public DrawOnTop(Context context, Cube current) {
 		super(context);
 		this.context = context;
 		this.current = current;
-		this.future = future;
 
 		// Creates a bunch of paints that fill an area by default
 		for(int i = 0; i < paintGrid.length; i++){
@@ -105,39 +103,10 @@ public class DrawOnTop extends View {
 			getAverageGridPaints();
 			drawGrid(canvas);
 
-			if(phase < 6){
-				//				if(captureButton){
-				//					readFace(phase);
-				//					captureButton = false;
-				//				}else if(continueButton){
-				//					displayInstructionsToast(phase, canvas);
-				//					if(phase == 5){
-				//						debugCubeColors();
-				//						recompileCubeColors();
-				//						debugCubeInts();
-				//					}
-				//				continueButton = false;
-			}else if(phase >= 6){
-
-			}
 		} // end if statement
 
 		super.onDraw(canvas);
 	} // end onDraw method
-
-	public int getPhase(){
-		return phase;
-	}
-	
-	public void setPhase(int phase){
-		this.phase = phase; 
-	}
-
-
-	public void incrementPhase(){
-		phase++;
-	}
-
 
 	public void debugCubeColors(){
 		for(int face = 0; face < 6; face++){

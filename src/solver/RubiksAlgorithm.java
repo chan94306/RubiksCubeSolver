@@ -58,12 +58,13 @@ public class RubiksAlgorithm extends AsyncTask<String, Integer, Void> {
 		}
 		return null;
 		 */
+		//~~~~~~ Double check this codeblock to make sure notifies are working properly ~~~~~//
 		
 		notifyMainThreadDialog("first layer cross starting");
 		firstLayerCross();
 		notifyMainThreadDialog("first layer cross completed");
 		notifyMainThreadDialog("first layer corners starting");
-		firstLayerCorners(); 
+		firstLayerCorners();
 		notifyMainThreadDialog("first layer corners completed");
 		notifyMainThreadDialog("second layer starting");
 		secondLayer();
@@ -114,11 +115,11 @@ public class RubiksAlgorithm extends AsyncTask<String, Integer, Void> {
 		if(CW)
 			//			Toast.makeText(applicationContext, "Rotate whole cube clockwise", Toast.LENGTH_LONG).show();
 			//			dialog.setText("Rotate whole cube clockwise");
-			notifyMainThreadDialog("Rotate whole cube clockwise");
+			notifyMainThreadToast("Rotate whole cube clockwise");
 		else 
 			//			Toast.makeText(applicationContext, "Rotate whole cube counterclockwise", Toast.LENGTH_LONG).show();
 			//			dialog.setText("Rotate whole cube counterclockwise");
-			notifyMainThreadDialog("Rotate whole cube counterclockwise");
+			notifyMainThreadToast("Rotate whole cube counterclockwise");
 	}
 
 
@@ -148,10 +149,16 @@ public class RubiksAlgorithm extends AsyncTask<String, Integer, Void> {
 			else s += " down";
 		}
 		//		Toast.makeText(applicationContext, s, Toast.LENGTH_LONG).show();
-		notifyMainThreadDialog(s);
+		notifyMainThreadToast(s);
 	}
 
-	private void notifyMainThreadDialog(String s) {
+	/**
+ * Does some thing in old style.
+ *
+ * @deprecated no longer using Toasts. Refer to notifyMainThreadImageView
+ */
+	@deprecated
+	private void notifyMainThreadToast(String s) {
 		Message msg =  new Message();
 		Bundle bundle = new Bundle();
 
@@ -162,12 +169,12 @@ public class RubiksAlgorithm extends AsyncTask<String, Integer, Void> {
 
 	}
 
-	private void notifyMainThreadImageView( int face, boolean direction){
+	private void notifyMainThreadImageView(int face, boolean direction){
 		Message msg =  new Message();
 		Bundle bundle = new Bundle();
 
-		bundle.putInt( "face", face);
-		bundle.putBoolean( "direction", direction);
+		bundle.putInt("face", face);
+		bundle.putBoolean("direction", direction);
 		msg.setData(bundle);
 
 		mHandler.sendMessage(msg);

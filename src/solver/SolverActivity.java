@@ -22,6 +22,9 @@ import android.view.ViewGroup.LayoutParams;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,8 +37,11 @@ public class SolverActivity extends Activity{
 
 	private final ColorToggleButton[][] colorToggles = new ColorToggleButton[3][3];
 	private TextView dialog;
+	private ImageView arrowImage;
 	private Button captureButton, skipButton;
 	private Handler mHandler;
+
+	private int phase = 0;
 
 	private Cube current = new Cube(), future = new Cube();
 
@@ -58,6 +64,29 @@ public class SolverActivity extends Activity{
 		int displayWidth = size.x;
 		int displayHeight = size.y;
 
+//And use it to set up margins
+		int squareLength;
+		int leftBound, topBound;
+		//		Log.e("dims", "" + mImageWidth + " " + mImageHeight);		// 320, 240
+		if(displayWidth < displayHeight){
+			squareLength = (int)(displayWidth/3.0);
+			leftBound = 0;
+			topBound = (int)(displayHeight/2.0 - 1.5*squareLength);
+		}
+		// flush by height and offset width
+		else{
+			squareLength = (int)(displayHeight/3.0);
+			leftBound = (int)(displayWidth/2.0 - 1.5*squareLength);
+			topBound = 0;
+		}
+
+		// Sets up an ImageView to display arrows for on-screen directions
+		arrowImage = new ImageView(this);
+		arrowImage.setImageResource(R.drawable.arrow);
+		arrowImage.setY(0);
+		LayoutParams arrowLayoutParams = new LayoutParams(100, Math.min(displayWidth, displayHeight) - 20);
+		Log.e("aw", "" + arrowLayoutParams.width + " " + arrowLayoutParams.height);
+		
 		// Creates some handler shit
 		// Defines a Handler object that's attached to the UI thread
 		mHandler = new Handler(Looper.getMainLooper()) {
@@ -68,9 +97,59 @@ public class SolverActivity extends Activity{
 			@Override
 			public void handleMessage(Message msg) {
 				Bundle bundle = msg.getData();
-				Toast.makeText(getApplicationContext(), bundle.getString("Instruction message"), Toast.LENGTH_SHORT).show();
+				//Toast.makeText(getApplicationContext(), bundle.getString("Instruction message"), Toast.LENGTH_SHORT).show();
 				//				dialog.setText(bundle.getString("Instruction message"));
 
+				int face = bundle.getInt("face");
+				boolean direction = bundle.getBoolean("direction");
+
+				switch(face){
+				case 0: 
+					if(direction){
+
+					}else{
+
+					}
+
+					break;
+				case 1: 
+					if(direction){
+
+					}else{
+
+					}
+					break;
+				case 2: 
+					if(direction){
+
+					}else{
+
+					}
+					break;
+				case 3: // never rotate the back face
+					break;
+				case 4: 
+					if(direction){
+
+					}else{
+
+					}
+					break;
+				case 5: 
+					if(direction){
+
+					}else{
+
+					}
+					break;
+				case 6: 
+					if(direction){
+
+					}else{
+
+					}
+					break;
+				}
 			}
 		};
 		
@@ -85,7 +164,7 @@ public class SolverActivity extends Activity{
 
 		// Create our Preview view and set it as the content of our activity.
 		// Create our DrawOnTop view.
-		mDrawOnTop = new DrawOnTop(this, current, future);
+		mDrawOnTop = new DrawOnTop(this, current);
 		mPreview = new Preview(this, mDrawOnTop);
 		mRubiksAlgorithm = new RubiksAlgorithm(dialog, current, future, mDrawOnTop, mHandler, getApplicationContext());
 
@@ -117,27 +196,27 @@ public class SolverActivity extends Activity{
 					//					new RubiksAlgorithm(dialog, current, future, mDrawOnTop, getApplicationContext()).execute();
 
 
-					//					Log.e("phase" ,"" + mDrawOnTop.getPhase());
+					//					Log.e("phase" ,"" + phase;
 
 					//					mDrawOnTop.notifyCapture();
-					mDrawOnTop.readFace(mDrawOnTop.getPhase());
-					enableColorSelection(mDrawOnTop.getPhase());
+					mDrawOnTop.readFace(phase);
+ 					enableColorSelection(phase);
 					captureButton.setText("Continue");
 				}else{
 					//					mDrawOnTop.notifyContinue();
-					disableColorSelection(mDrawOnTop.getPhase());
+					disableColorSelection(phase);
 
-					if(mDrawOnTop.getPhase() == 5){
+					if(phase == 5){
 						//						mDrawOnTop.debugCubeColors();
 						mDrawOnTop.recompileCubeColors();
-						if(!current.isValidCube()){
-							mDrawOnTop.setPhase(0);
-							captureButton.setText("Capture");
-							current = new Cube();
-							future = new Cube();
-							Toast.makeText(getApplicationContext(), "You screwed up. Reread cube faces.", Toast.LENGTH_SHORT).show();
-							return;
-						}
+						// if(!current.isValidCube()){
+						// 	mDrawOnTop.setPhase(0);
+						// 	captureButton.setText("Capture");
+						// 	current = new Cube();
+						// 	future = new Cube();
+						// 	Toast.makeText(getApplicationContext(), "You screwed up. Reread cube faces.", Toast.LENGTH_SHORT).show();
+						// 	return;
+						// }
 						//						mDrawOnTop.debugCubeInts();
 						captureButton.setVisibility(Button.INVISIBLE);
 						skipButton.setVisibility(Button.VISIBLE);
@@ -145,8 +224,8 @@ public class SolverActivity extends Activity{
 
 						mRubiksAlgorithm.execute();
 					}
-					mDrawOnTop.displayInstructionsToast(mDrawOnTop.getPhase());		// can't access canvas so screw it
-					mDrawOnTop.incrementPhase();
+					mDrawOnTop.displayInstructionsToast(phase);		// can't access canvas so screw it
+					phase++;
 					captureButton.setText("Capture");
 
 				}
@@ -163,25 +242,9 @@ public class SolverActivity extends Activity{
 		addContentView(captureButton, new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
 		addContentView(skipButton, new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
 		addContentView(dialog, new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+		addContentView(arrowImage, arrowLayoutParams);
 
-		// The rest is all for creating 9 damn buttons -----------------
 
-		int squareLength;
-		int leftBound, topBound;
-
-		//		Log.e("dims", "" + mImageWidth + " " + mImageHeight);		// 320, 240
-
-		if(displayWidth < displayHeight){
-			squareLength = (int)(displayWidth/3.0);
-			leftBound = 0;
-			topBound = (int)(displayHeight/2.0 - 1.5*squareLength);
-		}
-		// else flush by height and offset width
-		else{
-			squareLength = (int)(displayHeight/3.0);
-			leftBound = (int)(displayWidth/2.0 - 1.5*squareLength);
-			topBound = 0;
-		}
 
 		// CHECK TO MAKE SURE INVISIBLE BUTTONS CAN'T BE PRESSED
 		for(int i = 0; i < colorToggles.length; i++){
