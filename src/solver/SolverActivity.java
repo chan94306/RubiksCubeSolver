@@ -27,6 +27,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import andy_andrew.rubiks.R;
 
 // THIS IS THE MAIN ACTIVITY
 
@@ -64,7 +65,7 @@ public class SolverActivity extends Activity{
 		int displayWidth = size.x;
 		int displayHeight = size.y;
 
-//And use it to set up margins
+		//And use it to set up margins
 		int squareLength;
 		int leftBound, topBound;
 		//		Log.e("dims", "" + mImageWidth + " " + mImageHeight);		// 320, 240
@@ -86,7 +87,7 @@ public class SolverActivity extends Activity{
 		arrowImage.setY(0);
 		LayoutParams arrowLayoutParams = new LayoutParams(100, Math.min(displayWidth, displayHeight) - 20);
 		Log.e("aw", "" + arrowLayoutParams.width + " " + arrowLayoutParams.height);
-		
+
 		// Creates some handler shit
 		// Defines a Handler object that's attached to the UI thread
 		mHandler = new Handler(Looper.getMainLooper()) {
@@ -97,12 +98,17 @@ public class SolverActivity extends Activity{
 			@Override
 			public void handleMessage(Message msg) {
 				Bundle bundle = msg.getData();
-				//Toast.makeText(getApplicationContext(), bundle.getString("Instruction message"), Toast.LENGTH_SHORT).show();
-				//				dialog.setText(bundle.getString("Instruction message"));
 
-				int face = bundle.getInt("face");
-				boolean direction = bundle.getBoolean("direction");
+				String toastMessage = bundle.getString("toastMessage");
+				if(toastMessage != null){
+					Toast.makeText(getApplicationContext(), toastMessage, Toast.LENGTH_SHORT).show();
+					//					dialog.setText(bundle.getString("Instruction message"));
+				}else{
+					displayArrow(bundle.getInt("face"), bundle.getBoolean("direction"));
+				}
+			}
 
+			private void displayArrow(int face, boolean direction) {
 				switch(face){
 				case 0: 
 					if(direction){
@@ -149,10 +155,11 @@ public class SolverActivity extends Activity{
 
 					}
 					break;
-				}
+
+				}				
 			}
 		};
-		
+
 
 		// Initializes the general-purposes dialog box
 		dialog = new TextView(this);
@@ -200,7 +207,7 @@ public class SolverActivity extends Activity{
 
 					//					mDrawOnTop.notifyCapture();
 					mDrawOnTop.readFace(phase);
- 					enableColorSelection(phase);
+					enableColorSelection(phase);
 					captureButton.setText("Continue");
 				}else{
 					//					mDrawOnTop.notifyContinue();
