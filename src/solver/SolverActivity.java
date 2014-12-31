@@ -1,36 +1,23 @@
 package solver;
 
 import cube.Cube;
-import cube.Main;
 import android.app.Activity;
-import android.content.Context;
-import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.os.Message;
 import android.util.Log;
 import android.view.Display;
-import android.view.MotionEvent;
-import android.view.SurfaceView;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.View.OnTouchListener;
 import android.view.ViewGroup.LayoutParams;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 import andy_andrew.rubiks.R;
 
 // THIS IS THE MAIN ACTIVITY
-
 public class SolverActivity extends Activity{    
 	private Preview mPreview;
 	private DrawOnTop mDrawOnTop;
@@ -86,83 +73,12 @@ public class SolverActivity extends Activity{
 		arrowImage.setImageResource(R.drawable.arrow);
 		arrowImage.setY(0);
 		LayoutParams arrowLayoutParams = new LayoutParams(100, Math.min(displayWidth, displayHeight) - 20);
-		Log.e("aw", "" + arrowLayoutParams.width + " " + arrowLayoutParams.height);
+//		Log.e("aw", "" + arrowLayoutParams.width + " " + arrowLayoutParams.height);
 
 		// Creates some handler shit
 		// Defines a Handler object that's attached to the UI thread
 		
-//		mHandler = new SolverActivityHandler(Looper.getMainLooper());
-		
-		mHandler = new Handler(Looper.getMainLooper()) {
-			/*
-			 * handleMessage() defines the operations to perform when
-			 * the Handler receives a new Message to process.
-			 */
-			@Override
-			public void handleMessage(Message msg) {
-				Bundle bundle = msg.getData();
-
-				String toastMessage = bundle.getString("toastMessage");
-				if(toastMessage != null){
-					Toast.makeText(getApplicationContext(), toastMessage, Toast.LENGTH_SHORT).show();
-					//					dialog.setText(bundle.getString("Instruction message"));
-				}else{
-					displayArrow(bundle.getInt("face"), bundle.getBoolean("direction"));
-				}
-			}
-
-			private void displayArrow(int face, boolean direction) {
-				switch(face){
-				case 0: 
-					if(direction){
-
-					}else{
-
-					}
-
-					break;
-				case 1: 
-					if(direction){
-
-					}else{
-
-					}
-					break;
-				case 2: 
-					if(direction){
-
-					}else{
-
-					}
-					break;
-				case 3: // never rotate the back face
-					break;
-				case 4: 
-					if(direction){
-
-					}else{
-
-					}
-					break;
-				case 5: 
-					if(direction){
-
-					}else{
-
-					}
-					break;
-				case 6: 
-					if(direction){
-
-					}else{
-
-					}
-					break;
-
-				}				
-			}
-		};
-
+		mHandler = new SolverActivityHandler(Looper.getMainLooper(), getApplicationContext());
 
 		// Initializes the general-purposes dialog box
 		dialog = new TextView(this);
@@ -178,15 +94,12 @@ public class SolverActivity extends Activity{
 		mPreview = new Preview(this, mDrawOnTop);
 		mRubiksAlgorithm = new RubiksAlgorithm(dialog, current, future, mDrawOnTop, mHandler, getApplicationContext());
 
-
-
 		// Initializes the skip step button
 		skipButton = new Button(this);
 		skipButton.setText("I swear I did this step correctly");
 		skipButton.setY(size.y - 100);
 		skipButton.setX(size.x - 500);
 		skipButton.setVisibility(Button.INVISIBLE);
-
 		skipButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				mRubiksAlgorithm.enableForceSkip();
@@ -196,18 +109,13 @@ public class SolverActivity extends Activity{
 		// Initializes the capture button
 		captureButton = new Button(this);
 		captureButton.setText("Capture");
-		captureButton.setY(size.y - 100);
-
-
-
+		captureButton.setX(size.x - 200);
+		captureButton.setY(0);
 		captureButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				if(captureButton.getText().equals("Capture")){
 					//					new RubiksAlgorithm(dialog, current, future, mDrawOnTop, getApplicationContext()).execute();
-
-
 					//					Log.e("phase" ,"" + phase;
-
 					//					mDrawOnTop.notifyCapture();
 					mDrawOnTop.readFace(phase);
 					enableColorSelection(phase);
@@ -244,9 +152,6 @@ public class SolverActivity extends Activity{
 
 		});
 
-
-
-
 		setContentView(mPreview);
 		addContentView(mDrawOnTop, new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
 		addContentView(captureButton, new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
@@ -254,9 +159,6 @@ public class SolverActivity extends Activity{
 		addContentView(dialog, new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
 		addContentView(arrowImage, arrowLayoutParams);
 
-
-
-		// CHECK TO MAKE SURE INVISIBLE BUTTONS CAN'T BE PRESSED
 		for(int i = 0; i < colorToggles.length; i++){
 			for(int j = 0; j < colorToggles[i].length; j++){
 				colorToggles[i][j] = new ColorToggleButton(this);
@@ -264,17 +166,11 @@ public class SolverActivity extends Activity{
 				colorToggles[i][j].setX(leftBound + squareLength*j);
 				colorToggles[i][j].setY(topBound + squareLength*i);
 				addContentView(colorToggles[i][j], new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
-				// ONCLICKLISTENER IS ALREADY SET IN CLASS CONSTRUCTOR
 			}
 		}
 
 	}
-
-	///----------------///
-
-
-
-
+	
 	public void enableColorSelection(int face){
 		for(int i = 0; i < colorToggles.length; i++){
 			for(int j = 0; j < colorToggles[i].length; j++){
