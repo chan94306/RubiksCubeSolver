@@ -22,8 +22,6 @@ public class ColorToggleButton extends Button{
 				// change the color string displayed, the state variable, and the color of the cubesquare
 				incrementState();
 				setText(getColor());
-
-
 				Log.e("colorToggleButton", "pressed");
 			}
 		});

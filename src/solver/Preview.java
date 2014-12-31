@@ -14,9 +14,6 @@ import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.View.OnClickListener;
 
-
-
-
 public class Preview extends SurfaceView implements SurfaceHolder.Callback{
 	SurfaceHolder mHolder;
 	Camera mCamera;
@@ -47,16 +44,17 @@ public class Preview extends SurfaceView implements SurfaceHolder.Callback{
 		mCamera = Camera.open();
 		Camera.Parameters mParams = mCamera.getParameters();
 		
+		Log.e("tag1", "preview1");
 		if(mParams.isAutoExposureLockSupported()){
 			mParams.setAutoExposureLock(true);
 		}
-//		if(mParams.isAutoWhiteBalanceLockSupported()){
-//			mParams.setAutoWhiteBalanceLock(true);
-//		}
-		
+		if(mParams.isAutoWhiteBalanceLockSupported()){
+			mParams.setAutoWhiteBalanceLock(true);
+		}
+//		
 		mParams.setExposureCompensation(0);
 //		mParams.setWhiteBalance(value);
-		
+//		
 //		Log.e("White balance", "" + mParams.getAutoWhiteBalanceLock());
 //		Log.e("exposure ", "" + mParams.getAutoExposureLock());
 //		Log.e("exposure compensation range", "" + mParams.getMinExposureCompensation() + " " + mParams.getMaxExposureCompensation());
@@ -121,7 +119,7 @@ public class Preview extends SurfaceView implements SurfaceHolder.Callback{
 		Camera.Parameters parameters = mCamera.getParameters();
 		parameters.setPreviewSize(320, 240);
 		//	parameters.setPreviewFrameRate(15);
-		parameters.setSceneMode(Camera.Parameters.SCENE_MODE_NIGHT);
+//		parameters.setSceneMode(Camera.Parameters.SCENE_MODE_NIGHT);
 		parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
 		mCamera.setParameters(parameters);
 		mCamera.startPreview();
