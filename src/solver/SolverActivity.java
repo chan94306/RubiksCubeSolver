@@ -19,9 +19,13 @@ import andy_andrew.rubiks.R;
 
 // THIS IS THE MAIN ACTIVITY
 public class SolverActivity extends Activity{    
+	
+	public int displayWidth, displayHeight;
+	
 	private Preview mPreview;
 	private DrawOnTop mDrawOnTop;
 	private RubiksAlgorithm mRubiksAlgorithm;
+	private ArrowManager mArrowManager;
 
 	private final ColorToggleButton[][] colorToggles = new ColorToggleButton[3][3];
 	private TextView dialog;
@@ -49,8 +53,8 @@ public class SolverActivity extends Activity{
 		Display display = getWindowManager().getDefaultDisplay();
 		Point size = new Point();
 		display.getSize(size);
-		int displayWidth = size.x;
-		int displayHeight = size.y;
+		displayWidth = size.x;
+		displayHeight = size.y;
 
 		//And use it to set up margins
 		int squareLength;
@@ -68,13 +72,6 @@ public class SolverActivity extends Activity{
 			topBound = 0;
 		}
 
-		// Sets up an ImageView to display arrows for on-screen directions
-		arrowImage = new ImageView(this);
-		arrowImage.setImageResource(R.drawable.arrow);
-		arrowImage.setY(0);
-		LayoutParams arrowLayoutParams = new LayoutParams(100, Math.min(displayWidth, displayHeight) - 20);
-//		Log.e("aw", "" + arrowLayoutParams.width + " " + arrowLayoutParams.height);
-
 		// Creates some handler shit
 		// Defines a Handler object that's attached to the UI thread
 		
@@ -88,11 +85,12 @@ public class SolverActivity extends Activity{
 		dialog.setY(50);
 		dialog.setTextSize(displayHeight/30);
 
-		// Create our Preview view and set it as the content of our activity.
 		// Create our DrawOnTop view.
+		// Create our Preview view and set it as the content of our activity.
 		mDrawOnTop = new DrawOnTop(this, current);
 		mPreview = new Preview(this, mDrawOnTop);
 		mRubiksAlgorithm = new RubiksAlgorithm(dialog, current, future, mDrawOnTop, mHandler, getApplicationContext());
+		mArrowManager = new ArrowManager(this);
 
 		// Initializes the skip step button
 		skipButton = new Button(this);
@@ -157,7 +155,7 @@ public class SolverActivity extends Activity{
 		addContentView(captureButton, new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
 		addContentView(skipButton, new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
 		addContentView(dialog, new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
-		addContentView(arrowImage, arrowLayoutParams);
+		mArrowManager.initializeArrows();
 
 		for(int i = 0; i < colorToggles.length; i++){
 			for(int j = 0; j < colorToggles[i].length; j++){

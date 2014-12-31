@@ -33,7 +33,6 @@ public class SolverActivityHandler extends Handler{
 	@Override
 	public void handleMessage(Message msg) {
 		Bundle bundle = msg.getData();
-		
 		/*
 		 * These three will never all be extracted, 
 		 * but we get them all first, and then figure out which ones exist,
@@ -98,7 +97,7 @@ public class SolverActivityHandler extends Handler{
 
 			}
 			break;
-		case 3: // never rotate the back face -- double check
+		case 3: // never rotate the back face -- double check with Andrew
 			break;
 		case 4: 
 			if(direction){
