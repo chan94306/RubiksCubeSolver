@@ -231,7 +231,8 @@ public class RubiksAlgorithm extends AsyncTask<String, Integer, Void> {
 			//			i++;
 		}
 		forceSkip = false;
-		current.clone(future);
+		
+		current = new Cube(future);
 		if(face == 6) current.reMap();
 		//		Log.e("solveStep", "ended");
 	}
@@ -276,7 +277,7 @@ public class RubiksAlgorithm extends AsyncTask<String, Integer, Void> {
 
 		}
 		forceSkip = false;
-		current.clone(future);
+		current = new Cube(future);
 		current.reMap();
 		future.reMap();
 		Log.e("sameFace", "current remapped");
@@ -312,7 +313,7 @@ public class RubiksAlgorithm extends AsyncTask<String, Integer, Void> {
 	}
 
 	public  void firstLayerCorners(){
-		future.clone(current);
+		future = new Cube(current);
 		while(current.numFirstLayerCornersCorrect() < 3){
 			if(!current.isLeftBottomCornerCorrect() && current.isCornersOnTopLayer()){
 				notifyMainThreadToast("corners on top layer");
@@ -433,7 +434,7 @@ public class RubiksAlgorithm extends AsyncTask<String, Integer, Void> {
 	 * piece should be recognized and placed into the cross. 
 	 */
 	public void firstLayerCross(){
-		future.clone(current);
+		future = new Cube(current);
 		while(!current.isFirstLayerCrossSolved()){
 			if(!current.isFirstLayerEdgeCorrect() && current.isFirstLayerEdgesEasilyAvailable()){
 				notifyMainThreadToast("first layer edges easily available");
@@ -594,7 +595,7 @@ public class RubiksAlgorithm extends AsyncTask<String, Integer, Void> {
 	 */
 	public void secondLayer(){
 		Log.e("secondLayer", "first line");
-		future.clone(current);
+		future = new Cube(current);
 		Log.e("secondLayer", "future cloned");
 		notifyMainThreadToast("starting second layer");
 		Log.e("secondLayer", "starting second layer");
@@ -842,7 +843,7 @@ public class RubiksAlgorithm extends AsyncTask<String, Integer, Void> {
 	 *
 	 */
 	public  void topLayerCross(){
-		future.clone(current);
+		future = new Cube(current);
 		while(!current .isTopCrossSolved()){
 			notifyMainThreadToast("Top Layer Cross not complete");
 			Log.e("topLayerCross", "top cross not solved, enter while loop");
@@ -896,7 +897,7 @@ public class RubiksAlgorithm extends AsyncTask<String, Integer, Void> {
 	 *
 	 */
 	public  void topLayerCorners(){
-		future.clone(current);
+		future = new Cube(current);
 		while(!current .isTopCornersPermutated2()){
 			Log.e("topLayerCorners" ,"top corners not permutated, inside while loop");
 			notifyMainThreadToast("Top Layer Corners Not Permutated");
@@ -1019,7 +1020,7 @@ public class RubiksAlgorithm extends AsyncTask<String, Integer, Void> {
 	 * @see solveTopFaceHelper
 	 */
 	public void solveTopFace(){
-		future.clone(current);
+		future = new Cube(current);
 		while (!current .isFaceSolved(5)){
 			notifyMainThreadToast("Top Face Not Solved");
 			int numSquares = current.countSquaresOnFace(5); //Detect top face pattern
@@ -1072,7 +1073,7 @@ public class RubiksAlgorithm extends AsyncTask<String, Integer, Void> {
 	 *
 	 */
 	public void topLayerEdges(){
-		future.clone(current) ;
+		future = new Cube(current);
 
 
 		while(!current.isSolved()){
