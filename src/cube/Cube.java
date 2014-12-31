@@ -1,5 +1,6 @@
 package cube;
 
+import java.util.Arrays;
 import java.util.HashMap;
 
 import android.util.Log;
@@ -34,8 +35,8 @@ public class Cube implements Cloneable{
 	private int leftColor , frontColor , rightColor , backColor , topColor , bottomColor = 0;
 	private int [] RGBColors = {leftColor , frontColor , rightColor , backColor , topColor, bottomColor};
 	private int algorithmCounter = 0;
-	private final boolean CW = true; //Clockwise
-	private final boolean CCW = false; //Counterclockwise
+	public static final boolean CW = true; //Clockwise
+	public static final boolean CCW = false; //Counterclockwise
 	//     boolean solved = false;
 	private HashMap<Integer, Integer> colorMap = new HashMap<Integer, Integer>();
 
@@ -73,8 +74,76 @@ public class Cube implements Cloneable{
 	//            return clone;
 	//        }
 
+	
+	
 	public Cube clone(){
 		return new Cube(cube, RGBColors);
+	}
+	
+	// Copy constructor
+	public Cube(Cube c){
+		for(int f = 0; f<6; f++){
+			for(int i = 0; i <3; i++){
+				for(int j = 0; j<3; j++){
+					setSquare(f, i, j, c.getSquare(f, i, j));
+
+				}
+			}
+			RGBColors[f] = c.getColorValue(f);
+		}
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "Cube [cube=" + Arrays.toString(cube) + ", RGBColors="
+				+ Arrays.toString(RGBColors) + ", colorMap=" + colorMap + "]";
+	}
+	
+	
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + Arrays.hashCode(RGBColors);
+		result = prime * result
+				+ ((colorMap == null) ? 0 : colorMap.hashCode());
+		result = prime * result + Arrays.hashCode(cube);
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!(obj instanceof Cube)) {
+			return false;
+		}
+		Cube other = (Cube) obj;
+		if (!Arrays.equals(RGBColors, other.RGBColors)) {
+			return false;
+		}
+		if (colorMap == null) {
+			if (other.colorMap != null) {
+				return false;
+			}
+		} else if (!colorMap.equals(other.colorMap)) {
+			return false;
+		}
+		if (!Arrays.deepEquals(cube, other.cube)) {
+			return false;
+		}
+		return true;
 	}
 
 	public void clone(Cube c){
