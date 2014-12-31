@@ -90,6 +90,9 @@ public class SolverActivity extends Activity{
 
 		// Creates some handler shit
 		// Defines a Handler object that's attached to the UI thread
+		
+//		mHandler = new SolverActivityHandler(Looper.getMainLooper());
+		
 		mHandler = new Handler(Looper.getMainLooper()) {
 			/*
 			 * handleMessage() defines the operations to perform when
