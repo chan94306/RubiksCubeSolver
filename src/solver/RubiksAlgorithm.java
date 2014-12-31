@@ -47,7 +47,6 @@ public class RubiksAlgorithm extends AsyncTask<String, Integer, Void> {
 	@Override
 	protected Void doInBackground(String... args) {
 		/* 			 sample test stuff to do
-
 		try {
 			for (Integer i = 0; i < 10; i++) {
 				Thread.sleep(1000);
@@ -81,7 +80,6 @@ public class RubiksAlgorithm extends AsyncTask<String, Integer, Void> {
 		topLayerEdges();
 
 		Log.e("doInBackGround" ,"topLayerEdges finished");
-
 		return null;
 	}
 
@@ -103,53 +101,45 @@ public class RubiksAlgorithm extends AsyncTask<String, Integer, Void> {
 		forceSkip = true;
 		Log.e("forceSkip", "" + forceSkip);
 	}
-
-
-
-	//To be completed
+	/**
+	 * Rotate the entire cube
+	 * @param CW direction of rotation, either left/CW (true) or right/CCW (false)
+	 */
 	public void toastInstructions(boolean CW){
-
-		//		Log.e("displayInstructions", "1");
-
 		//display an arrow to rotate the entire cube
 		if(CW)
-			//			Toast.makeText(applicationContext, "Rotate whole cube clockwise", Toast.LENGTH_LONG).show();
-			//			dialog.setText("Rotate whole cube clockwise");
-			notifyMainThreadToast("Rotate whole cube clockwise");
+			notifyMainThreadToast("Rotate whole cube left/clockwise");
 		else 
-			//			Toast.makeText(applicationContext, "Rotate whole cube counterclockwise", Toast.LENGTH_LONG).show();
-			//			dialog.setText("Rotate whole cube counterclockwise");
-			notifyMainThreadToast("Rotate whole cube counterclockwise");
+			notifyMainThreadToast("Rotate whole cube right/counterclockwise");
 	}
-
-
-	//To be completed    
+	/**
+	 * Rotate a particular slab/face, as opposed to the entire cube.
+	 * 14 possible outputs in all
+	 * @param face which face to rotate (0 to 6)
+	 * @param CW direction of rotation
+	 */
 	public void toastInstructions(int face, boolean CW){
-
-		//		Log.e("displayInstructions", "2");
-
-		//display an arrow on a specific row/column to rotate a side
-		String s = "Rotate ";
+		String msg = "Rotate ";
 
 		switch(face){
-		case 0: s+="left face";break;
-		case 1: s+="front face";break;
-		case 2: s+="right face";break;
-		case 3: s+="back face";break;
-		case 4: s+="bottom face";break;
-		case 5: s+="top face";break;
-		case 6: s+="middle column";break;
+		case 0: msg+="left face";break;
+		case 1: msg+="front face";break;
+		case 2: msg+="right face";break;
+		case 3: msg+="back face";break;
+		case 4: msg+="bottom face";break;
+		case 5: msg+="top face";break;
+		case 6: msg+="middle column";break;
 		}
 
 		if(face < 6){
-			if(CW) s += " clockwise";
-			else s += " counterclockwise";
+			if(CW) msg += " clockwise";
+			else msg += " counterclockwise";
 		}else{
-			if(CW) s += " up";
-			else s += " down";
+			if(CW) msg += " up";
+			else msg += " down";
 		}
 		//		Toast.makeText(applicationContext, s, Toast.LENGTH_LONG).show();
-		notifyMainThreadToast(s);
+		notifyMainThreadToast(msg);
 	}
 
 /**
@@ -157,40 +147,51 @@ public class RubiksAlgorithm extends AsyncTask<String, Integer, Void> {
  */
 	@Deprecated
 	private void notifyMainThreadToast(String s) {
-		Message msg =  new Message();
 		Bundle bundle = new Bundle();
-
-		bundle.putString("toastMessage", s);
+		bundle.putString("toastString", s);
+		
+		Message msg =  new Message();
 		msg.setData(bundle);
-
 		mHandler.sendMessage(msg);
 
 	}
-
-	private void notifyMainThread(int face, boolean direction){
+	/**
+	 * Notify the SolverActivity thread to display an arrow for the user to rotate the cube
+	 * @param direction direction of rotation, either left/CW (true) or right/CCW (false)
+	 */
+	private void notifyMainThread_RotateCube(boolean direction){
+		Bundle bundle = new Bundle();
+		bundle.putBoolean("direction", direction);
+		
+		Message msg = new Message();
+		msg.setData(bundle);
+		mHandler.sendMessage(msg);
+	}
+	
+	/**
+	 * Notify the SolverActivity thread to display an arrow for the user to rotate a slab/face
+	 * @param face which face to rotate (6)
+	 * @param direction direction of rotation (2)
+	 */
+	private void notifyMainThread_RotateFace(int face, boolean direction){
 		Bundle bundle = new Bundle();
 		bundle.putInt("face", face);
 		bundle.putBoolean("direction", direction);
 		
-		Message msg =  new Message();
+		Message msg = new Message();
 		msg.setData(bundle);
-
 		mHandler.sendMessage(msg);
 	}
 	
-	// What does this do?
+	// What is this used for?
 	public boolean sameFace(int[][] a, int[][] b){
-		int counter = 0;
 		for(int i = 0; i<3; i++){
 			for(int j = 0; j<3; j++){
-				if(a[i][j] == b[i][j]) counter++;
+				if(a[i][j] != b[i][j]) return false;
 			}
 		}
-		return (counter == 9);
+		return true;
 	}
-
-
-
 
 	/**
 	 * Implements specified cube face rotation instruction by altering a copy of the current cube (future cube) and displaying
