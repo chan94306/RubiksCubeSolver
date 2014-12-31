@@ -266,22 +266,24 @@ public class DrawOnTop extends View {
 		 */
 		int screenWidth = canvas.getWidth();
 		int screenHeight = canvas.getHeight();
-		int squareLength;
-		int leftBound, topBound;
+		int squareLength = SolverActivity.squareLength;
+		int leftBound = SolverActivity.leftBound;
+		int topBound = SolverActivity.topBound;
 
 		//		Log.e("dims", "" + mImageWidth + " " + mImageHeight);		// 320, 240
 
-		if(screenWidth < screenHeight){
-			squareLength = (int)(screenWidth/3.0);
-			leftBound = 0;
-			topBound = (int)(screenHeight/2.0 - 1.5*squareLength);
-		}
-		// else flush by height and offset width
-		else{
-			squareLength = (int)(screenHeight/3.0);
-			leftBound = (int)(screenWidth/2.0 - 1.5*squareLength);
-			topBound = 0;
-		}
+//		if(screenWidth < screenHeight){
+//			squareLength = (int)(screenWidth/3.0);
+//			leftBound = 0;
+//			topBound = (int)(screenHeight/2.0 - 1.5*squareLength);
+//		}
+//		// else flush by height and offset width
+//		else{
+//			squareLength = (int)(screenHeight/3.0);
+//			leftBound = (int)(screenWidth/2.0 - 1.5*squareLength);
+//			topBound = 0;
+//		}
+		
 		canvas.drawRect(1, 0, screenWidth-1, screenHeight-1, mPaintRed);
 		canvas.drawRect(leftBound, topBound, leftBound+3*squareLength, topBound+3*squareLength, mPaintRed);
 		canvas.drawLine(leftBound, topBound+1*squareLength, leftBound+3*squareLength, topBound+1*squareLength, mPaintRed);
@@ -301,8 +303,10 @@ public class DrawOnTop extends View {
 	// sets the squarePaints Paint array with the 9 average colors of the 9 squares of a face
 	public void getAverageGridPaints(){
 		// Bounds of the square, reset every loop of i for the 9 squares
+		int leftMargin = SolverActivity.leftBound;
+		int topMargin = SolverActivity.topBound;
 		int leftBound, topBound;
-		int squareLength;
+		int squareLength = SolverActivity.squareLength;
 		int redVal, greenVal, blueVal;							// don't actually to explicitly state these
 		int redMean = 0, greenMean = 0, blueMean = 0;
 
@@ -313,15 +317,13 @@ public class DrawOnTop extends View {
 				// if width is less than height, flush by width and offset height
 				// xyzz
 				if(mImageWidth < mImageHeight){
-					squareLength = (int)(mImageWidth/3.0);
-					leftBound = (int)(squareLength*n);
-					topBound = (int)(mImageHeight/2.0 - 1.5*squareLength + squareLength*m);
+					leftBound = (int)(leftMargin + squareLength*n);
+					topBound = (int)(topMargin + squareLength*m);
 				}
 				// else flush by height and offset width
 				else{
-					squareLength = (int)(mImageHeight/3.0);
-					leftBound = (int)(mImageWidth/2.0 - 1.5*squareLength + squareLength*n);
-					topBound = (int)(squareLength*m);
+					leftBound = (int)(leftMargin + squareLength*n);
+					topBound = (int)(topMargin + squareLength*m);
 				}
 
 

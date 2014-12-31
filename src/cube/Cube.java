@@ -63,18 +63,6 @@ public class Cube implements Cloneable{
 		this.RGBColors = RGBColors;
 	}
 
-	//        protected Cube clone(){
-	//            Cube clone = null;
-	//			try {
-	//				clone = (Cube)super.clone();
-	//			} catch (CloneNotSupportedException e) {
-	//				// TODO Auto-generated catch block
-	//				e.printStackTrace();
-	//			}
-	//            return clone;
-	//        }
-
-	
 	
 	public Cube clone(){
 		return new Cube(cube, RGBColors);
@@ -89,9 +77,10 @@ public class Cube implements Cloneable{
 
 				}
 			}
-			RGBColors[f] = c.getColorValue(f);
+			setColorValue(f, getColorValue(f));
 		}
 	}
+	
 
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
@@ -173,11 +162,6 @@ public class Cube implements Cloneable{
 				}
 			}
 		}
-
-		// cube[3][0][0] = 7;
-		// cube[3][1][0] = 8;
-		// cube[3][2][0] = 9;
-
 	}
 
 	/**

@@ -18,7 +18,9 @@ import android.widget.TextView;
 import andy_andrew.rubiks.R;
 
 // THIS IS THE MAIN ACTIVITY
-public class SolverActivity extends Activity{    
+public class SolverActivity extends Activity{   
+	public static int topBound, leftBound, squareLength;
+	public static final double GRID_PROPORTION = 0.6;
 	private Preview mPreview;
 	private DrawOnTop mDrawOnTop;
 	private RubiksAlgorithm mRubiksAlgorithm;
@@ -53,19 +55,20 @@ public class SolverActivity extends Activity{
 		int displayHeight = size.y;
 
 		//And use it to set up margins
-		int squareLength;
-		int leftBound, topBound;
+		//		Log.e("dims", "" + mImageWidth + " " + mImageHeight);		// 320, 240
 		//		Log.e("dims", "" + mImageWidth + " " + mImageHeight);		// 320, 240
 		if(displayWidth < displayHeight){
-			squareLength = (int)(displayWidth/3.0);
-			leftBound = 0;
+			Log.e("test", "displayWidth<Height");		
+			squareLength = (int)(displayWidth/3.0*GRID_PROPORTION);
+			Log.e("test", ""+squareLength);
+			leftBound = (int) (displayWidth/2.0 - 1.5*squareLength);
 			topBound = (int)(displayHeight/2.0 - 1.5*squareLength);
 		}
 		// flush by height and offset width
 		else{
-			squareLength = (int)(displayHeight/3.0);
+			squareLength = (int)(displayHeight/3.0*GRID_PROPORTION);
 			leftBound = (int)(displayWidth/2.0 - 1.5*squareLength);
-			topBound = 0;
+			topBound = (int) (displayHeight/2.0 - 1.5*squareLength);
 		}
 
 		// Sets up an ImageView to display arrows for on-screen directions
