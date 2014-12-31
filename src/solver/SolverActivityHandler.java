@@ -7,6 +7,13 @@ import android.os.Looper;
 import android.os.Message;
 import android.widget.Toast;
 
+/**
+ * @author andy
+ * SolverActivityHandler is the Handler that SolverActivity uses to process Messages, mostly from RubiksAlgorithm, the side thread.
+ * Messages contain information specifying a notification to the UI, in the form of arrows to direct the user in solving the cube. 
+ * 
+ * Takes data from Model and modifies View
+ */
 public class SolverActivityHandler extends Handler{
 	Context context;
 

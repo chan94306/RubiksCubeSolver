@@ -153,7 +153,7 @@ public class RubiksAlgorithm extends AsyncTask<String, Integer, Void> {
 	}
 
 /**
- * @Deprecated no longer using Toasts. Use for debuggin ONLY. Refer to notifyMainThreadImageView
+ * @Deprecated no longer using Toasts. Use for debuggin ONLY. Refer to notifyMainThread
  */
 	@Deprecated
 	private void notifyMainThreadToast(String s) {
@@ -167,22 +167,20 @@ public class RubiksAlgorithm extends AsyncTask<String, Integer, Void> {
 
 	}
 
-	private void notifyMainThreadImageView(int face, boolean direction){
-		Message msg =  new Message();
+	private void notifyMainThread(int face, boolean direction){
 		Bundle bundle = new Bundle();
-
 		bundle.putInt("face", face);
 		bundle.putBoolean("direction", direction);
+		
+		Message msg =  new Message();
 		msg.setData(bundle);
 
 		mHandler.sendMessage(msg);
 	}
-
+	
+	// What does this do?
 	public boolean sameFace(int[][] a, int[][] b){
 		int counter = 0;
-
-
-
 		for(int i = 0; i<3; i++){
 			for(int j = 0; j<3; j++){
 				if(a[i][j] == b[i][j]) counter++;
