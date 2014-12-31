@@ -3,6 +3,7 @@
 #################
 
 *.pydevproject
+bin/
 tmp/
 *.tmp
 *.bak
