@@ -21,6 +21,8 @@ import andy_andrew.rubiks.R;
 public class SolverActivity extends Activity{    
 	
 	public int displayWidth, displayHeight;
+	public static int topBound, leftBound, squareLength;
+	public static final double GRID_PROPORTION = 0.5;
 	
 	private Preview mPreview;
 	private DrawOnTop mDrawOnTop;
@@ -40,11 +42,7 @@ public class SolverActivity extends Activity{
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
-		//		displayInstructions(false);
-		//		displayInstructions(true);
-		//		displayInstructions(5, false);
-
+		
 		// Hide the window title.
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		//		requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -57,24 +55,21 @@ public class SolverActivity extends Activity{
 		displayHeight = size.y;
 
 		//And use it to set up margins
-		int squareLength;
-		int leftBound, topBound;
 		//		Log.e("dims", "" + mImageWidth + " " + mImageHeight);		// 320, 240
 		if(displayWidth < displayHeight){
-			squareLength = (int)(displayWidth/3.0);
-			leftBound = 0;
+			squareLength = (int)(displayWidth/3.0*GRID_PROPORTION);
+			leftBound = (int) (displayWidth/2.0 - 1.5*squareLength);
 			topBound = (int)(displayHeight/2.0 - 1.5*squareLength);
 		}
 		// flush by height and offset width
 		else{
-			squareLength = (int)(displayHeight/3.0);
+			squareLength = (int)(displayHeight/3.0*GRID_PROPORTION);
 			leftBound = (int)(displayWidth/2.0 - 1.5*squareLength);
-			topBound = 0;
+			topBound = (int) (displayHeight/2.0 - 1.5*squareLength);
 		}
+//		Log.e("12/31", ""+squareLength + " " + displayWidth + " " + displayHeight + " " + leftBound + " " + topBound);
 
-		// Creates some handler shit
 		// Defines a Handler object that's attached to the UI thread
-		
 		mHandler = new SolverActivityHandler(Looper.getMainLooper(), getApplicationContext());
 
 		// Initializes the general-purposes dialog box

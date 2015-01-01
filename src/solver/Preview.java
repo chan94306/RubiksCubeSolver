@@ -45,21 +45,21 @@ public class Preview extends SurfaceView implements SurfaceHolder.Callback{
 		Camera.Parameters mParams = mCamera.getParameters();
 		
 		Log.e("tag1", "preview1");
-		if(mParams.isAutoExposureLockSupported()){
-			mParams.setAutoExposureLock(true);
-		}
-		if(mParams.isAutoWhiteBalanceLockSupported()){
-			mParams.setAutoWhiteBalanceLock(true);
-		}
+//		if(mParams.isAutoExposureLockSupported()){
+//			mParams.setAutoExposureLock(true);
+//		}
+//		if(mParams.isAutoWhiteBalanceLockSupported()){
+//			mParams.setAutoWhiteBalanceLock(true);
+//		}
 //		
-		mParams.setExposureCompensation(0);
+//		mParams.setExposureCompensation(0);
 //		mParams.setWhiteBalance(value);
 //		
 //		Log.e("White balance", "" + mParams.getAutoWhiteBalanceLock());
 //		Log.e("exposure ", "" + mParams.getAutoExposureLock());
 //		Log.e("exposure compensation range", "" + mParams.getMinExposureCompensation() + " " + mParams.getMaxExposureCompensation());
 //		Log.e(tag, "" + mParams.get)
-		
+			
 		mCamera.setParameters(mParams);
 		
 		try {
