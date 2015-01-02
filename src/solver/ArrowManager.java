@@ -40,4 +40,71 @@ public class ArrowManager {
 		mSolverActivity.addContentView(upArrow, arrowLayoutParams);
 	}
 
+	/**
+	 * Displays an arrow to specify that the user should rotate the entire cube
+	 * @param direction direction of rotation, either left/CW (true) or right/CCW (false)
+	 */
+	private void displayArrow_Cube(boolean direction) {
+		if(direction ==  LEFT){
+			
+		}else{
+			
+		}
+	}
+
+	/**
+	 * Displays an arrow to specify that the user should rotate a face/slab
+	 * @param face which face to rotate (0 to 6)
+	 * @param direction direction of rotation, either CW (true) or CCW (false)
+	 */
+	private void displayArrow_Face(int face, boolean direction) {
+		// if direction is true, then it is a 'clockwise' rotation
+		switch(face){
+		case 0: 
+			if(direction){
+
+			}else{
+
+			}
+			break;
+		case 1: 
+			if(direction){
+
+			}else{
+
+			}
+			break;
+		case 2: 
+			if(direction){
+
+			}else{
+
+			}
+			break;
+		case 3: // never rotate the back face -- double check with Andrew
+			break;
+		case 4: 
+			if(direction){
+
+			}else{
+
+			}
+			break;
+		case 5: 
+			if(direction){
+
+			}else{
+
+			}
+			break;
+		case 6: 
+			if(direction){
+
+			}else{
+
+			}
+			break;
+		}				
+	}
+
 }
