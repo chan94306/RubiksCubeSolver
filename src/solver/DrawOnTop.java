@@ -266,9 +266,9 @@ public class DrawOnTop extends View {
 		 */
 		int screenWidth = canvas.getWidth();
 		int screenHeight = canvas.getHeight();
-		int squareLength = SolverActivity.squareLength;
-		int leftBound = SolverActivity.leftBound;
-		int topBound = SolverActivity.topBound;
+		int squareLength = UIValues.squareLength;
+		int leftBound = UIValues.leftBound;
+		int topBound = UIValues.topBound;
 
 		//		Log.e("dims", "" + mImageWidth + " " + mImageHeight);		// 320, 240
 
@@ -303,7 +303,7 @@ public class DrawOnTop extends View {
 	// sets the squarePaints Paint array with the 9 average colors of the 9 squares of a face
 	public void getAverageGridPaints(){
 		// Bounds of the square, reset every loop of i for the 9 squares
-		double prop = SolverActivity.GRID_PROPORTION;
+		double prop = UIValues.GRID_PROPORTION;
 		int leftBound, topBound;
 		int squareLength;
 		int redVal, greenVal, blueVal;							// don't actually to explicitly state these

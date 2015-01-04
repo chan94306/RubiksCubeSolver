@@ -20,9 +20,9 @@ import andy_andrew.rubiks.R;
 // THIS IS THE MAIN ACTIVITY
 public class SolverActivity extends Activity{    
 	
-	public int displayWidth, displayHeight;
-	public static int topBound, leftBound, squareLength;
-	public static final double GRID_PROPORTION = 0.5;
+//	public int displayWidth, displayHeight;
+//	public static int topBound, leftBound, squareLength;
+//	public static final double GRID_PROPORTION = 0.5;
 	
 	private Preview mPreview;
 	private DrawOnTop mDrawOnTop;
@@ -46,31 +46,15 @@ public class SolverActivity extends Activity{
 		// Hide the window title.
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		//		requestWindowFeature(Window.FEATURE_NO_TITLE);
-
+		
 		// Get some information about the display
 		Display display = getWindowManager().getDefaultDisplay();
 		Point size = new Point();
 		display.getSize(size);
-		displayWidth = size.x;
-		displayHeight = size.y;
-
-		//And use it to set up margins
-		//		Log.e("dims", "" + mImageWidth + " " + mImageHeight);		// 320, 240
-		if(displayWidth < displayHeight){
-			squareLength = (int)(displayWidth/3.0*GRID_PROPORTION);
-			leftBound = (int) (displayWidth/2.0 - 1.5*squareLength);
-			topBound = (int)(displayHeight/2.0 - 1.5*squareLength);
-		}
-		// flush by height and offset width
-		else{
-			squareLength = (int)(displayHeight/3.0*GRID_PROPORTION);
-			leftBound = (int)(displayWidth/2.0 - 1.5*squareLength);
-			topBound = (int) (displayHeight/2.0 - 1.5*squareLength);
-		}
-//		Log.e("12/31", ""+squareLength + " " + displayWidth + " " + displayHeight + " " + leftBound + " " + topBound);
-
-		// Defines a Handler object that's attached to the UI thread
-		mHandler = new SolverActivityHandler(Looper.getMainLooper(), getApplicationContext());
+		UIValues.displayWidth = size.x;
+		UIValues.displayHeight = size.y;
+		UIValues.GRID_PROPORTION = 0.5;
+		UIValues.init();
 
 		// Initializes the general-purposes dialog box
 		dialog = new TextView(this);
@@ -78,7 +62,7 @@ public class SolverActivity extends Activity{
 		dialog.setText("Follow rotation instructions, then tap to read face");
 		dialog.setX(50);
 		dialog.setY(50);
-		dialog.setTextSize(displayHeight/30);
+		dialog.setTextSize(UIValues.displayHeight/30);
 
 		// Create our DrawOnTop view.
 		// Create our Preview view and set it as the content of our activity.
@@ -156,11 +140,14 @@ public class SolverActivity extends Activity{
 			for(int j = 0; j < colorToggles[i].length; j++){
 				colorToggles[i][j] = new ColorToggleButton(this);
 				colorToggles[i][j].setVisibility(Button.INVISIBLE);
-				colorToggles[i][j].setX(leftBound + squareLength*j);
-				colorToggles[i][j].setY(topBound + squareLength*i);
+				colorToggles[i][j].setX(UIValues.leftBound + UIValues.squareLength*j);
+				colorToggles[i][j].setY(UIValues.topBound + UIValues.squareLength*i);
 				addContentView(colorToggles[i][j], new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
 			}
 		}
+		
+		// Defines a Handler object that's attached to the UI thread
+		mHandler = new SolverActivityHandler(this, Looper.getMainLooper(), mArrowManager);
 
 	}
 	

@@ -16,14 +16,16 @@ import android.widget.Toast;
  */
 public class SolverActivityHandler extends Handler{
 	Context context;
+	ArrowManager mArrowManager;
 	// For face/slab rotations
 	private static final boolean CW = true, CCW = false;
 	// For whole cube rotations
 	private static final boolean LEFT = true, RIGHT = false;
 
-	public SolverActivityHandler(Looper mainLooper, Context context) {
+	public SolverActivityHandler(Context context, Looper mainLooper, ArrowManager am) {
 		super(mainLooper);
 		this.context = context;
+		this.mArrowManager = am;
 	}
 	
 	/*
