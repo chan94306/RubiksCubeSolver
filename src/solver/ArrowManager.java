@@ -62,8 +62,9 @@ public class ArrowManager {
 		downArrow = faceArrows[2];
 		leftArrow = faceArrows[3];
 		
-		upArrow.setX(UIValues.displayWidth/2-upArrow.getWidth());
-		upArrow.setY(UIValues.displayHeight/2-upArrow.getHeight());
+		// the arrow is not 100% centered due to asymmetry in the image itself. easy fix, we can do it later.
+		upArrow.setX(UIValues.displayWidth/2-upArrow.getWidth()/2 + UIValues.squareLength/2);
+		upArrow.setY((float) (UIValues.displayHeight/2-upArrow.getHeight()/2 - UIValues.squareLength*1.5));
 //		Log.e("", "" + upArrow.getMaxWidth() + " " + upArrow.getMaxHeight());
 		
 	}
