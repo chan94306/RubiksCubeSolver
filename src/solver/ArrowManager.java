@@ -39,22 +39,23 @@ public class ArrowManager {
 	}
 
 	public void initializeArrows() {
-		LayoutParams p;
+		// This is stupid, but we can't seem to access it anywhere. We can toss this into dimens.xml OR find a smarter way to read it
+		int oHeight = 936;
+		int oWidth = 288;
+		// The height of the arrow image, scaled down to match the size of the grid
+		int height = (int) (UIValues.GRID_PROPORTION*Math.min(UIValues.displayHeight, UIValues.displayWidth));
+		int width = (oWidth * height)/oHeight;
+		
+		LayoutParams p = new LayoutParams(width, height);
+
 		for(int i = 0 ; i < faceArrows.length; i++){
 			faceArrows[i] = new ImageView(mSolverActivity);
 			faceArrows[i].setImageResource(R.drawable.arrow);
-			faceArrows[i].setX(0);
-			
-//			if(i%2 == 0){
-				// up or down; 288 is the width of the PNG in pixels
-				p = new LayoutParams((int) (288*UIValues.GRID_PROPORTION), (int) (UIValues.GRID_PROPORTION*Math.min(UIValues.displayHeight, UIValues.displayWidth)));
-//			}else{
-//				p = new LayoutParams((int) (UIValues.GRID_PROPORTION*Math.min(UIValues.displayHeight, UIValues.displayWidth)), (int) (936*UIValues.GRID_PROPORTION));
-//			}
-			Log.e("", "" + p.width + " " + p.height);
 			mSolverActivity.addContentView(faceArrows[i], p);
-			faceArrows[i].setRotation(i*90);
-
+			
+			// This is cool shit to mess with
+//			faceArrows[i].setRotationX(width/2);
+//			faceArrows[i].setRotationY(width/2);
 		}
 		
 		upArrow = faceArrows[0];
@@ -62,11 +63,61 @@ public class ArrowManager {
 		downArrow = faceArrows[2];
 		leftArrow = faceArrows[3];
 		
-		// the arrow is not 100% centered due to asymmetry in the image itself. easy fix, we can do it later.
-		upArrow.setX(UIValues.displayWidth/2-upArrow.getWidth()/2 + UIValues.squareLength/2);
-		upArrow.setY((float) (UIValues.displayHeight/2-upArrow.getHeight()/2 - UIValues.squareLength*1.5));
-//		Log.e("", "" + upArrow.getMaxWidth() + " " + upArrow.getMaxHeight());
+		downArrow.setRotation(180);
+				
+		rightArrow.setPivotX(height/2);
+		rightArrow.setPivotY(height/2);
+		rightArrow.setRotation(90);
 		
+		leftArrow.setPivotX(width/2);
+		leftArrow.setPivotY(width/2);
+		leftArrow.setRotation(-90);
+		
+//		for(int i = 0 ; i < faceArrows.length; i++){
+//			Log.e("arrow location " + i, "" + faceArrows[i].getX() + " " + faceArrows[i].getY());
+//			Log.e("arrow dimens " + i, "" + upArrow.getWidth() + " " + upArrow.getHeight());
+//		}
+//		Log.e("displaywidth/height", "" + UIValues.displayWidth + " " + UIValues.displayHeight);
+		centerImage(leftArrow, UIValues.displayWidth/2, UIValues.displayHeight/2 - UIValues.squareLength);
+//		Log.e("arrow location", "" + leftArrow.getX() + " " + leftArrow.getY());
+		centerImage(downArrow, UIValues.displayWidth/2 - UIValues.squareLength, UIValues.displayHeight/2);
+		centerImage(rightArrow, UIValues.displayWidth/2, UIValues.displayHeight/2 + UIValues.squareLength);
+		centerImage(upArrow, UIValues.displayWidth/2 + UIValues.squareLength, UIValues.displayHeight/2);
+
+
+
+		// the arrow is not 100% centered due to asymmetry in the image itself. easy fix, we can do it later.
+//		upArrow.setX(UIValues.displayWidth/2 + UIValues.squareLength/2);
+//		upArrow.setY((float) (UIValues.displayHeight/2 - UIValues.squareLength*1.5));
+//		upArrow.setX(UIValues.displayWidth/2);
+//		upArrow.setY(UIValues.displayHeight/2);
+//		Log.e("up arrow dimens", "" + upArrow.getWidth() + " " + upArrow.getHeight());
+//		Log.e("up arrow location", "" + upArrow.getX() + " " + upArrow.getY());
+//		Log.e("UIValues.displayHeight and width", ""+ UIValues.displayWidth + " " + UIValues.displayHeight);
+//		Log.e("LayoutParams", "" + upArrow.getLayoutParams().width + " " + upArrow.getLayoutParams().height);
+		
+	}
+	
+	/**
+	 * Center an ImageView on a specified point
+	 * (Sets the center of the img to (x, y))
+	 * @param img ImageView to be centered
+	 * @param x x-coordinate of the point to which img will be centered
+	 * @param y y-coordinate of the point to which img will be centered
+	 */
+	public void centerImage(ImageView img, int x, int y){
+//		Log.e("img", "" + img.getLayoutParams().width + " " + img.getLayoutParams().height);
+//		Log.e("img2", "" + img.getMeasuredHeight() + " " + img.getMeasuredHeight());
+		int rot = (int) img.getRotation();
+		
+		// if it's 90 +/- 180
+		if(rot%90 == 0 && rot%180 != 0){
+			img.setX(x - img.getLayoutParams().height/2);
+			img.setY(y - img.getLayoutParams().width/2);
+		}else{
+			img.setX(x - img.getLayoutParams().width/2);
+			img.setY(y - img.getLayoutParams().height/2);
+		}
 	}
 
 	/**
