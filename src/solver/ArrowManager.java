@@ -73,29 +73,29 @@ public class ArrowManager {
 		leftArrow.setPivotY(width/2);
 		leftArrow.setRotation(-90);
 		
-//		for(int i = 0 ; i < faceArrows.length; i++){
-//			Log.e("arrow location " + i, "" + faceArrows[i].getX() + " " + faceArrows[i].getY());
-//			Log.e("arrow dimens " + i, "" + upArrow.getWidth() + " " + upArrow.getHeight());
-//		}
-//		Log.e("displaywidth/height", "" + UIValues.displayWidth + " " + UIValues.displayHeight);
-		centerImage(leftArrow, UIValues.displayWidth/2, UIValues.displayHeight/2 - UIValues.squareLength);
-//		Log.e("arrow location", "" + leftArrow.getX() + " " + leftArrow.getY());
-		centerImage(downArrow, UIValues.displayWidth/2 - UIValues.squareLength, UIValues.displayHeight/2);
-		centerImage(rightArrow, UIValues.displayWidth/2, UIValues.displayHeight/2 + UIValues.squareLength);
-		centerImage(upArrow, UIValues.displayWidth/2 + UIValues.squareLength, UIValues.displayHeight/2);
-
-
-
-		// the arrow is not 100% centered due to asymmetry in the image itself. easy fix, we can do it later.
-//		upArrow.setX(UIValues.displayWidth/2 + UIValues.squareLength/2);
-//		upArrow.setY((float) (UIValues.displayHeight/2 - UIValues.squareLength*1.5));
-//		upArrow.setX(UIValues.displayWidth/2);
-//		upArrow.setY(UIValues.displayHeight/2);
-//		Log.e("up arrow dimens", "" + upArrow.getWidth() + " " + upArrow.getHeight());
-//		Log.e("up arrow location", "" + upArrow.getX() + " " + upArrow.getY());
-//		Log.e("UIValues.displayHeight and width", ""+ UIValues.displayWidth + " " + UIValues.displayHeight);
-//		Log.e("LayoutParams", "" + upArrow.getLayoutParams().width + " " + upArrow.getLayoutParams().height);
+//		centerImage(leftArrow, UIValues.displayWidth/2, UIValues.displayHeight/2 - UIValues.squareLength);
+//		centerImage(downArrow, UIValues.displayWidth/2 - UIValues.squareLength, UIValues.displayHeight/2);
+//		centerImage(rightArrow, UIValues.displayWidth/2, UIValues.displayHeight/2 + UIValues.squareLength);
+//		centerImage(upArrow, UIValues.displayWidth/2 + UIValues.squareLength, UIValues.displayHeight/2);
 		
+		CWArrow = new ImageView(mSolverActivity);
+		CWArrow.setImageResource(R.drawable.clockwise);
+		mSolverActivity.addContentView(CWArrow, new LayoutParams(UIValues.squareLength*2, UIValues.squareLength*2));
+
+		CCWArrow = new ImageView(mSolverActivity);
+		CCWArrow.setImageResource(R.drawable.counterclockwise);
+		mSolverActivity.addContentView(CCWArrow, new LayoutParams(UIValues.squareLength*2, UIValues.squareLength*2));
+
+//		displayArrow_Face(0, true);
+//		displayArrow_Face(1, true);
+//		displayArrow_Face(2, true);
+		clearArrows();
+
+
+	}
+	
+	private void centerOnGrid(ImageView img, int i, int j) {
+		centerImage(img, UIValues.displayWidth/2+i*UIValues.squareLength, UIValues.displayHeight/2+j*UIValues.squareLength);
 	}
 	
 	/**
@@ -143,23 +143,30 @@ public class ArrowManager {
 		case 0: 
 			if(direction){
 				// Left face down
-//				upArrow.setY(UIValues.displayHeight/2);
+				downArrow.setVisibility(ImageView.VISIBLE);
+				centerOnGrid(downArrow, -1, 0);
 			}else{
 				// Left face up
+				upArrow.setVisibility(ImageView.VISIBLE);
+				centerOnGrid(upArrow, -1, 0);
 			}
 			break;
 		case 1: 
 			if(direction){
-
+				CWArrow.setVisibility(ImageView.VISIBLE);
+				centerOnGrid(CWArrow, 0, 0);
 			}else{
-
+				CCWArrow.setVisibility(ImageView.VISIBLE);
+				centerOnGrid(CCWArrow, 0, 0);
 			}
 			break;
 		case 2: 
 			if(direction){
-
+				upArrow.setVisibility(ImageView.VISIBLE);
+				centerOnGrid(upArrow, 1, 0);
 			}else{
-
+				downArrow.setVisibility(ImageView.VISIBLE);
+				centerOnGrid(downArrow, 1, 0);
 			}
 			break;
 		case 3: // never rotate the back face -- confirmed by Andrew
@@ -167,26 +174,43 @@ public class ArrowManager {
 			break;
 		case 4: 
 			if(direction){
-
+				rightArrow.setVisibility(ImageView.VISIBLE);
+				centerOnGrid(rightArrow, 0, 1);
 			}else{
-
+				leftArrow.setVisibility(ImageView.VISIBLE);
+				centerOnGrid(leftArrow, 0, 1);
 			}
 			break;
 		case 5: 
 			if(direction){
-
+				leftArrow.setVisibility(ImageView.VISIBLE);
+				centerOnGrid(leftArrow, 0, -1);
 			}else{
-
+				rightArrow.setVisibility(ImageView.VISIBLE);
+				centerOnGrid(rightArrow, 0, -1);
 			}
 			break;
 		case 6: 
 			if(direction){
-
+				upArrow.setVisibility(ImageView.VISIBLE);
+				centerOnGrid(upArrow, 0, 0);
 			}else{
-
+				downArrow.setVisibility(ImageView.VISIBLE);
+				centerOnGrid(downArrow, 0, 0);
 			}
 			break;
 		}				
+	}
+	
+	public void clearArrows(){
+//		for(ImageView arrow: cubeArrows){
+//			arrow.setVisibility(ImageView.INVISIBLE);
+//		}
+		for(ImageView arrow: faceArrows){
+			arrow.setVisibility(ImageView.INVISIBLE);
+		}
+		CWArrow.setVisibility(ImageView.INVISIBLE);
+		CCWArrow.setVisibility(ImageView.INVISIBLE);
 	}
 
 }

@@ -50,10 +50,12 @@ public class SolverActivityHandler extends Handler{
 		}
 		// If the face value exist, display a face/slab rotation arrow
 		else if(face != -1){
+			mArrowManager.clearArrows();
 			mArrowManager.displayArrow_Face(face, direction);
 		}
 		// Else only the boolean exists, so it must be a whole cube rotation
 		else{
+			mArrowManager.clearArrows();
 			mArrowManager.displayArrow_Cube(direction);
 		}
 	}
