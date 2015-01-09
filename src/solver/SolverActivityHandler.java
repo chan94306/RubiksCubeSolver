@@ -17,10 +17,6 @@ import android.widget.Toast;
 public class SolverActivityHandler extends Handler{
 	Context context;
 	ArrowManager mArrowManager;
-	// For face/slab rotations
-	private static final boolean CW = true, CCW = false;
-	// For whole cube rotations
-	private static final boolean LEFT = true, RIGHT = false;
 
 	public SolverActivityHandler(Context context, Looper mainLooper, ArrowManager am) {
 		super(mainLooper);
@@ -41,7 +37,7 @@ public class SolverActivityHandler extends Handler{
 		 * to decide what type of message is specified to the user.
 		 */
 		String toastString = bundle.getString("toastString");
-		boolean direction = bundle.getBoolean("direction");
+		int direction = bundle.getInt("direction");
 		int face = bundle.getInt("face", -1);
 		
 		// Handle Strings by Toasting

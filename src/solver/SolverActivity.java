@@ -15,6 +15,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 import andy_andrew.rubiks.R;
 
 // THIS IS THE MAIN ACTIVITY
@@ -53,7 +54,7 @@ public class SolverActivity extends Activity{
 		display.getSize(size);
 		UIValues.displayWidth = size.x;
 		UIValues.displayHeight = size.y;
-		UIValues.GRID_PROPORTION = 0.5;
+		UIValues.GRID_PROPORTION = 0.7;
 		UIValues.init();
 
 		// Initializes the general-purposes dialog box
@@ -68,7 +69,7 @@ public class SolverActivity extends Activity{
 		// Create our Preview view and set it as the content of our activity.
 		mDrawOnTop = new DrawOnTop(this, current);
 		mPreview = new Preview(this, mDrawOnTop);
-		mRubiksAlgorithm = new RubiksAlgorithm(dialog, current, future, mDrawOnTop, mHandler, getApplicationContext());
+		mRubiksAlgorithm = new RubiksAlgorithm(dialog, current, future, mDrawOnTop, getApplicationContext());
 		mArrowManager = new ArrowManager(this);
 
 		// Initializes the skip step button
@@ -119,7 +120,7 @@ public class SolverActivity extends Activity{
 
 						mRubiksAlgorithm.execute();
 					}
-					mDrawOnTop.displayInstructionsToast(phase);		// can't access canvas so screw it
+					displayInstructions(phase);
 					phase++;
 					captureButton.setText("Capture");
 
@@ -148,7 +149,7 @@ public class SolverActivity extends Activity{
 		
 		// Defines a Handler object that's attached to the UI thread
 		mHandler = new SolverActivityHandler(this, Looper.getMainLooper(), mArrowManager);
-
+		mRubiksAlgorithm.setHandler(mHandler);
 	}
 	
 	public void enableColorSelection(int face){
@@ -172,6 +173,28 @@ public class SolverActivity extends Activity{
 
 		current.setColorValue(face, colorToggles[1][1].getRawColorInt());
 		//		Log.e("face color", "" + colorToggles[1][1].getRawColorInt());
+	}
+	
+	public void displayInstructions(int face){
+		mArrowManager.clearArrows();
+		
+		String s;
+		if(face < 3){
+			s = "Rotate whole cube LEFT";
+			mArrowManager.displayArrow_Cube(ArrowManager.LEFT);
+		}else if(face == 3){
+			s = "Rotate whole cube LEFT TWICE, then UP";
+			mArrowManager.displayArrow_Cube(ArrowManager.LEFT);
+		}else if(face == 4){
+			s = "Rotate whole cube DOWN TWICE";
+			mArrowManager.displayArrow_Cube(ArrowManager.DOWN);
+		}else if(face == 5){
+			s = "Rotate whole cube UP. Ready to solve!";
+			mArrowManager.displayArrow_Cube(ArrowManager.UP);
+		}else{
+			s = "WTF something went wrong";
+		}
+		Toast.makeText(this, s, Toast.LENGTH_LONG).show();
 	}
 
 }

@@ -1,10 +1,12 @@
 package solver;
 
 import java.io.IOException;
+import java.util.List;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.hardware.Camera;
+import android.hardware.Camera.Parameters;
 import android.hardware.Camera.PreviewCallback;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -44,7 +46,6 @@ public class Preview extends SurfaceView implements SurfaceHolder.Callback{
 		mCamera = Camera.open();
 		Camera.Parameters mParams = mCamera.getParameters();
 		
-		Log.e("tag1", "preview1");
 //		if(mParams.isAutoExposureLockSupported()){
 //			mParams.setAutoExposureLock(true);
 //		}
@@ -117,11 +118,39 @@ public class Preview extends SurfaceView implements SurfaceHolder.Callback{
 		// Now that the size is known, set up the camera parameters and begin
 		// the preview.
 		Camera.Parameters parameters = mCamera.getParameters();
-		parameters.setPreviewSize(320, 240);
+		
+		setResolution(parameters);
+		
+//		parameters.setPreviewSize(320, 240);
 		//	parameters.setPreviewFrameRate(15);
 //		parameters.setSceneMode(Camera.Parameters.SCENE_MODE_NIGHT);
 		parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
 		mCamera.setParameters(parameters);
 		mCamera.startPreview();
+	}
+	
+	/**
+	 * Sets the resolution of the the Camera.Parameters to a resolution not too much greater than 320x240 
+	 * @param parameters parameters of the Camera object to set resolution
+	 */
+	private void setResolution(Parameters parameters) {
+		// original shitty resolution fixed at 320x240
+		int width = UIValues.displayWidth;
+		int height = UIValues.displayHeight;
+		// 320x240 = 76800
+		int max = 85000;
+		while(width*height > max){
+			width = (int) (0.9*width);
+			height = (int) (0.9*height);
+		}
+		
+	    List<Camera.Size> previewSizes = parameters.getSupportedPreviewSizes();
+	    for(int i = 0; i < previewSizes.size(); i++){
+	    	Camera.Size s = previewSizes.get(i);
+	    	Log.e("previewSizes" + i, ""+s.width + " "+s.height);
+	    }
+		
+		Log.e("resolution", "" + width + " " + height);
+		parameters.setPreviewSize(320, 240);	
 	}
 }

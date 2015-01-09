@@ -20,7 +20,6 @@ public class DrawOnTop extends View {
 	@SuppressLint("UseSparseArrays")
 	private HashMap<Integer, Integer> colorMap = new HashMap<Integer, Integer>();
 
-
 	private Cube current;
 
 	///// get rid of some of these later
@@ -234,21 +233,6 @@ public class DrawOnTop extends View {
 		}
 	}
 
-	public void displayInstructionsToast(int face){
-		String s;
-		if(face < 3){
-			s = "Rotate whole cube left";
-		}else if(face == 3){
-			s = "Rotate whole cube left twice, then up";
-		}else if(face == 4){
-			s = "Rotate whole cube down twice";
-		}else if(face == 5){
-			s = "Rotate whole cube up. Ready to solve!";
-		}else{
-			s = "WTF something went wrong";
-		}
-		Toast.makeText(context, s, Toast.LENGTH_LONG).show();
-	}
 	// OR notify button press
 //	public void notifyCapture(){
 //		captureButton = true;
@@ -270,7 +254,6 @@ public class DrawOnTop extends View {
 		int leftBound = UIValues.leftBound;
 		int topBound = UIValues.topBound;
 
-		//		Log.e("dims", "" + mImageWidth + " " + mImageHeight);		// 320, 240
 
 //		if(screenWidth < screenHeight){
 //			squareLength = (int)(screenWidth/3.0);

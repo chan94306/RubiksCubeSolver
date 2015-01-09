@@ -27,7 +27,6 @@ public class UIValues {
 	}
 	public static void init() {
 		//And use it to set up margins
-		//		Log.e("dims", "" + mImageWidth + " " + mImageHeight);		// 320, 240
 		if(displayWidth < displayHeight){
 			squareLength = (int)(displayWidth/3.0*GRID_PROPORTION);
 			leftBound = (int) (displayWidth/2.0 - 1.5*squareLength);
@@ -40,7 +39,6 @@ public class UIValues {
 			topBound = (int) (displayHeight/2.0 - 1.5*squareLength);
 		}
 //		Log.e("12/31", ""+squareLength + " " + displayWidth + " " + displayHeight + " " + leftBound + " " + topBound);
-		
 	}
 
 }

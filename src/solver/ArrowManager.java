@@ -18,10 +18,10 @@ import andy_andrew.rubiks.R;
 public class ArrowManager {
 	private SolverActivity mSolverActivity;
 	private ImageView[] cubeArrows = new ImageView[4];
-	private ImageView cubeUpArrow = cubeArrows[0];
-	private ImageView cubeDownArrow = cubeArrows[1];
-	private ImageView cubeLeftArrow = cubeArrows[2];
-	private ImageView cubeRightArrow = cubeArrows[3];
+	private ImageView cubeUpArrow;
+	private ImageView cubeDownArrow;
+	private ImageView cubeLeftArrow;
+	private ImageView cubeRightArrow;
 	
 	private ImageView[] faceArrows = new ImageView[4];
 	private ImageView upArrow;
@@ -32,13 +32,20 @@ public class ArrowManager {
 	private ImageView CWArrow;
 	private ImageView CCWArrow;
 	
-	private static final boolean LEFT = true, RIGHT = false;
+//	public static final boolean LEFT = true, RIGHT = false;
 	
+	// Used for cube rotations
+	public static final int UP = 0, RIGHT = 1, DOWN = 2, LEFT = 3;
+	// Used for face rotations
+	public static final int CW = 4, CCW = 5;
+
 	public ArrowManager(Context context) {
 		this.mSolverActivity = (SolverActivity) context;
 	}
 
 	public void initializeArrows() {
+		// [0, 255]
+		int alpha = 256*3/4;
 		// This is stupid, but we can't seem to access it anywhere. We can toss this into dimens.xml OR find a smarter way to read it
 		int oHeight = 936;
 		int oWidth = 288;
@@ -52,7 +59,7 @@ public class ArrowManager {
 			faceArrows[i] = new ImageView(mSolverActivity);
 			faceArrows[i].setImageResource(R.drawable.arrow);
 			mSolverActivity.addContentView(faceArrows[i], p);
-			
+			faceArrows[i].setImageAlpha(alpha);
 			// This is cool shit to mess with
 //			faceArrows[i].setRotationX(width/2);
 //			faceArrows[i].setRotationY(width/2);
@@ -81,17 +88,35 @@ public class ArrowManager {
 		CWArrow = new ImageView(mSolverActivity);
 		CWArrow.setImageResource(R.drawable.clockwise);
 		mSolverActivity.addContentView(CWArrow, new LayoutParams(UIValues.squareLength*2, UIValues.squareLength*2));
+		CWArrow.setImageAlpha(alpha);
 
 		CCWArrow = new ImageView(mSolverActivity);
 		CCWArrow.setImageResource(R.drawable.counterclockwise);
 		mSolverActivity.addContentView(CCWArrow, new LayoutParams(UIValues.squareLength*2, UIValues.squareLength*2));
+		CCWArrow.setImageAlpha(alpha);
 
+		// Length of one side of resized cube arrow (currently, cube arrow image is square)
+		int length = (int) (UIValues.GRID_PROPORTION*Math.min(UIValues.displayWidth, UIValues.displayHeight)/1.5);
+		p = new LayoutParams(length, length);
+		
+		for(int i = 0; i < cubeArrows.length; i++){
+			cubeArrows[i] = new ImageView(mSolverActivity);
+			cubeArrows[i].setImageResource(R.drawable.cubearrow);
+			cubeArrows[i].setRotation(i*90);
+			mSolverActivity.addContentView(cubeArrows[i], p);
+			centerImage(cubeArrows[i], UIValues.displayWidth/2, UIValues.displayHeight/2);
+			cubeArrows[i].setImageAlpha(alpha);
+		}
+		
+		cubeUpArrow = cubeArrows[0];
+		cubeRightArrow = cubeArrows[1];
+		cubeDownArrow = cubeArrows[2];
+		cubeLeftArrow = cubeArrows[3];
+		
 //		displayArrow_Face(0, true);
 //		displayArrow_Face(1, true);
 //		displayArrow_Face(2, true);
 		clearArrows();
-
-
 	}
 	
 	private void centerOnGrid(ImageView img, int i, int j) {
@@ -121,27 +146,42 @@ public class ArrowManager {
 	}
 
 	/**
+	 * @deprecated
 	 * Displays an arrow to specify that the user should rotate the entire cube
 	 * @param direction direction of rotation, either left/CW (true) or right/CCW (false)
 	 */
 	public void displayArrow_Cube(boolean direction) {
-		if(direction ==  LEFT){
-			
+//		int GAP = 10;
+		boolean LEFT = true;
+		if(direction == LEFT){
+//			int x = (int) (UIValues.displayWidth/2 - UIValues.squareLength*1.5 - cubeLeftArrow.getLayoutParams().width/2 - GAP);
+//			centerImage(cubeLeftArrow, x, UIValues.displayHeight/2);
+			cubeLeftArrow.setVisibility(ImageView.VISIBLE);
 		}else{
-			
+//			int x = (int) (UIValues.displayWidth/2 + UIValues.squareLength*1.5 + cubeRightArrow.getLayoutParams().width/2 + GAP);
+//			centerImage(cubeRightArrow, x, UIValues.displayHeight/2);
+			cubeRightArrow.setVisibility(ImageView.VISIBLE);
 		}
+	}
+	
+	/**
+	 * Displays an arrow to specify that the user should rotate the entire cube
+	 * @param direction direction of rotation
+	 */
+	public void displayArrow_Cube(int direction) {
+		cubeArrows[direction].setVisibility(ImageView.VISIBLE);
 	}
 
 	/**
 	 * Displays an arrow to specify that the user should rotate a face/slab
 	 * @param face which face to rotate (0 to 6)
-	 * @param direction direction of rotation, either CW (true) or CCW (false)
+	 * @param direction direction of rotation
 	 */
-	public void displayArrow_Face(int face, boolean direction) {
+	public void displayArrow_Face(int face, int direction) {
 		// if direction is true, then it is a 'clockwise' rotation
 		switch(face){
 		case 0: 
-			if(direction){
+			if(direction == CW){
 				// Left face down
 				downArrow.setVisibility(ImageView.VISIBLE);
 				centerOnGrid(downArrow, -1, 0);
@@ -152,7 +192,7 @@ public class ArrowManager {
 			}
 			break;
 		case 1: 
-			if(direction){
+			if(direction == CW){
 				CWArrow.setVisibility(ImageView.VISIBLE);
 				centerOnGrid(CWArrow, 0, 0);
 			}else{
@@ -161,7 +201,7 @@ public class ArrowManager {
 			}
 			break;
 		case 2: 
-			if(direction){
+			if(direction == CW){
 				upArrow.setVisibility(ImageView.VISIBLE);
 				centerOnGrid(upArrow, 1, 0);
 			}else{
@@ -173,7 +213,7 @@ public class ArrowManager {
 			Log.e("ArrowManager:displayArrow_Face", "case 3 should never be invoked");
 			break;
 		case 4: 
-			if(direction){
+			if(direction == CW){
 				rightArrow.setVisibility(ImageView.VISIBLE);
 				centerOnGrid(rightArrow, 0, 1);
 			}else{
@@ -182,7 +222,7 @@ public class ArrowManager {
 			}
 			break;
 		case 5: 
-			if(direction){
+			if(direction == CW){
 				leftArrow.setVisibility(ImageView.VISIBLE);
 				centerOnGrid(leftArrow, 0, -1);
 			}else{
@@ -191,7 +231,7 @@ public class ArrowManager {
 			}
 			break;
 		case 6: 
-			if(direction){
+			if(direction == CW){
 				upArrow.setVisibility(ImageView.VISIBLE);
 				centerOnGrid(upArrow, 0, 0);
 			}else{
@@ -202,10 +242,14 @@ public class ArrowManager {
 		}				
 	}
 	
+	/**
+	 * Sets all arrows invisible
+	 * Remember to uncomment the part for cubeArrows
+	 */
 	public void clearArrows(){
-//		for(ImageView arrow: cubeArrows){
-//			arrow.setVisibility(ImageView.INVISIBLE);
-//		}
+		for(ImageView arrow: cubeArrows){
+			arrow.setVisibility(ImageView.INVISIBLE);
+		}
 		for(ImageView arrow: faceArrows){
 			arrow.setVisibility(ImageView.INVISIBLE);
 		}

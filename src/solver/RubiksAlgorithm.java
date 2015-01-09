@@ -24,16 +24,19 @@ public class RubiksAlgorithm extends AsyncTask<String, Integer, Void> {
 	private static final int REFRESH_RATE = 500;
 
 	public RubiksAlgorithm(TextView dialog, Cube current, Cube future, 
-			DrawOnTop mDrawOnTop, Handler mHandler, Context applicationContext){
+			DrawOnTop mDrawOnTop, Context applicationContext){
 		this.dialog = dialog;
 		this.current = current;
 		this.future = future;
 		this.mDrawOnTop = mDrawOnTop;
+//		this.mHandler = mHandler;
+	}
+	
+	public void setHandler(Handler mHandler){
 		this.mHandler = mHandler;
 	}
-
+	
 	// can use UI thread here
-	// STEP 1: onPreExecute
 	@Override
 	protected void onPreExecute() {
 		//TODO : Initialize shit
@@ -42,23 +45,8 @@ public class RubiksAlgorithm extends AsyncTask<String, Integer, Void> {
 
 	// automatically done on worker thread (separated from UI thread)
 	//protected Void doInBackground(final String... args) {						// <---- original
-	// Step 2: doInBackground
-
 	@Override
-	protected Void doInBackground(String... args) {
-		/* 			 sample test stuff to do
-		try {
-			for (Integer i = 0; i < 10; i++) {
-				Thread.sleep(1000);
-				publishProgress(i);
-			}
-		} catch (InterruptedException e) {
-			Log.v("try-catch shit", e.getMessage());
-		}
-		return null;
-		 */
-		//~~~~~~ Double check this codeblock to make sure notifies are working properly ~~~~~//
-		
+	protected Void doInBackground(String... args) {		
 		notifyMainThreadToast("first layer cross starting");
 		firstLayerCross();
 		notifyMainThreadToast("first layer cross completed");
@@ -105,6 +93,7 @@ public class RubiksAlgorithm extends AsyncTask<String, Integer, Void> {
 	 * Rotate the entire cube
 	 * @param CW direction of rotation, either left/CW (true) or right/CCW (false)
 	 */
+	@Deprecated
 	public void toastInstructions(boolean CW){
 		//display an arrow to rotate the entire cube
 		if(CW)
@@ -155,13 +144,14 @@ public class RubiksAlgorithm extends AsyncTask<String, Integer, Void> {
 		mHandler.sendMessage(msg);
 
 	}
+	
 	/**
 	 * Notify the SolverActivity thread to display an arrow for the user to rotate the cube
 	 * @param direction direction of rotation, either left/CW (true) or right/CCW (false)
 	 */
 	private void notifyMainThread_RotateCube(boolean direction){
 		Bundle bundle = new Bundle();
-		bundle.putBoolean("direction", direction);
+		bundle.putInt("direction", (direction == CW) ? ArrowManager.LEFT : ArrowManager.RIGHT);
 		
 		Message msg = new Message();
 		msg.setData(bundle);
@@ -176,7 +166,7 @@ public class RubiksAlgorithm extends AsyncTask<String, Integer, Void> {
 	private void notifyMainThread_RotateFace(int face, boolean direction){
 		Bundle bundle = new Bundle();
 		bundle.putInt("face", face);
-		bundle.putBoolean("direction", direction);
+		bundle.putInt("direction", (direction == CW) ? ArrowManager.CW : ArrowManager.CCW);
 		
 		Message msg = new Message();
 		msg.setData(bundle);
@@ -203,20 +193,18 @@ public class RubiksAlgorithm extends AsyncTask<String, Integer, Void> {
 	 *                                Direction is relative to the face that is being rotated.
 	 */
 	public void solveStep(int face, boolean direction){
-		//		Log.e("solveStep", "started");
-
 		future.rotateSide(face, direction);
 		int[][] cFace = current.getFace(1);
 		int[][] fFace = future.getFace(1);
-		//		int i = 0;
 
 		//		Log.e("solveStep", "" + !sameFace(cFace, fFace));
 		toastInstructions(face, direction);
+		notifyMainThread_RotateFace(face, direction);
 
 		//		Log.e("sameFace", "current");
 		//		printArray(cFace);
-		Log.e("sameFace", "future");
-		for(int i = 0; i<6; i++) printArray(future.getFace(i));
+//		Log.e("sameFace", "future");
+//		for(int i = 0; i<6; i++) printArray(future.getFace(i));
 
 		while(!sameFace(cFace, fFace) && !forceSkip){
 			cFace = mDrawOnTop.update();
@@ -255,17 +243,18 @@ public class RubiksAlgorithm extends AsyncTask<String, Integer, Void> {
 		//		Log.e("solveStep2", "" + !sameFace(cFace, fFace));
 
 		toastInstructions(direction);
-
+		notifyMainThread_RotateCube(direction);
+		
 		//		Log.e("sameFace", "current");
 		//		printArray(cFace);
-		Log.e("sameFace", "future");
+//		Log.e("sameFace", "future");
 		//for(int i = 0; i<6; i++) printArray(future.getFace(i));
-		printArray(future.getFace(1));
+//		printArray(future.getFace(1));
 
 		while(!sameFace(cFace, fFace) && !forceSkip){
 			cFace = mDrawOnTop.update();
-			Log.e("sameFace", "current");
-			printArray(current.getFace(1));
+//			Log.e("sameFace", "current");
+//			printArray(current.getFace(1));
 			try {
 				Thread.sleep(REFRESH_RATE);
 
@@ -280,10 +269,10 @@ public class RubiksAlgorithm extends AsyncTask<String, Integer, Void> {
 		current = new Cube(future);
 		current.reMap();
 		future.reMap();
-		Log.e("sameFace", "current remapped");
-		printArray(current.getFace(1));
-		Log.e("sameFace", "future remapped");
-		printArray(current.getFace(1));
+//		Log.e("sameFace", "current remapped");
+//		printArray(current.getFace(1));
+//		Log.e("sameFace", "future remapped");
+//		printArray(current.getFace(1));
 		//		Log.e("solveStep2", "ended");
 
 	}
