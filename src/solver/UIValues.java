@@ -1,7 +1,6 @@
 package solver;
 
 import android.graphics.Color;
-import android.util.Log;
 import android.widget.ImageView;
 
 public class UIValues {

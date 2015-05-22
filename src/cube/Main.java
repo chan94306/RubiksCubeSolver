@@ -1,7 +1,6 @@
 package cube;
 
 public class Main {
-
 	final  boolean CW = true;
 	final  boolean CCW = false;
 	 Cube current = null;

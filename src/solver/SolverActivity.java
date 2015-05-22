@@ -1,6 +1,8 @@
 package solver;
 
 import cube.Cube;
+import colorpalette.*;
+import colortogglebutton.ColorToggleButton;
 import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.Point;
@@ -11,36 +13,32 @@ import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
-import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-import andy_andrew.rubiks.R;
 
 /**
- * Launched by the start screen. This solves the cube
+ * Launched by the start screen. This solves the cube.
+ * Models:
+ * Views:
+ * Controllers:
  * @author andy
  *
  */
 public class SolverActivity extends Activity{    
 	
-//	public int displayWidth, displayHeight;
-//	public static int topBound, leftBound, squareLength;
-//	public static final double GRID_PROPORTION = 0.5;
-	
-	private CameraView mPreview;
+	private CameraView mCameraView;
 	private DrawOnTop mDrawOnTop;
 	private RubiksAlgorithm mRubiksAlgorithm;
 	private ArrowManager mArrowManager;
 
 	private final ColorToggleButton[][] colorToggles = new ColorToggleButton[3][3];
 	private TextView dialog;
-	private ImageView arrowImage;
+//	private ImageView arrowImage;
 	private Button captureButton, skipButton;
 	private Handler mHandler;
 
-	private int phase = 0;
+	private int face = 0;
 
 	private Cube current = new Cube(), future = new Cube();
 
@@ -70,7 +68,7 @@ public class SolverActivity extends Activity{
 		UIValues.GRID_PROPORTION = 0.7;
 		UIValues.init();
 		
-		ColorPalette mColorPalette = new ColorPalette(this);
+//		ColorPalette mColorPalette = new ColorPalette(this);
 		
 
 		// Initializes the general-purposes dialog box
@@ -86,7 +84,7 @@ public class SolverActivity extends Activity{
 		// Create our DrawOnTop view.
 		// Create our Preview view and set it as the content of our activity.
 		mDrawOnTop = new DrawOnTop(this, current);
-		mPreview = new CameraView(this, mDrawOnTop);
+		mCameraView = new CameraView(this, mDrawOnTop);
 		mRubiksAlgorithm = new RubiksAlgorithm(current, future, mDrawOnTop);
 		mArrowManager = new ArrowManager(this);
 
@@ -110,28 +108,27 @@ public class SolverActivity extends Activity{
 		captureButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				if(captureButton.getText().equals("Capture")){
-					//					new RubiksAlgorithm(dialog, current, future, mDrawOnTop, getApplicationContext()).execute();
-					//					Log.e("phase" ,"" + phase;
-					//					mDrawOnTop.notifyCapture();
-					mDrawOnTop.readFace(phase);
-					enableColorSelection(phase);
+					mDrawOnTop.readFace(face, current);
+					enableColorSelection(face);
 					captureButton.setText("Continue");
 				}else{
-					//					mDrawOnTop.notifyContinue();
-					disableColorSelection(phase);
+					disableColorSelection(face);
 
-					if(phase == 5){
+					if(face == 5){
 						//						mDrawOnTop.debugCubeColors();
-						mDrawOnTop.recompileCubeColors();
-						// if(!current.isValidCube()){
-						// 	mDrawOnTop.setPhase(0);
-						// 	captureButton.setText("Capture");
-						// 	current = new Cube();
-						// 	future = new Cube();
-						// 	Toast.makeText(getApplicationContext(), "You screwed up. Reread cube faces.", Toast.LENGTH_SHORT).show();
-						// 	return;
-						// }
-						//						mDrawOnTop.debugCubeInts();
+						mDrawOnTop.recompileCubeColors(current);
+						/*
+						 //TODO: Re-enable this error check for user
+						 if(!current.isValidCube()){
+						 	mDrawOnTop.setPhase(0);
+						 	captureButton.setText("Capture");
+						 	current = new Cube();
+						 	future = new Cube();
+						 	Toast.makeText(getApplicationContext(), "You screwed up. Reread cube faces.", Toast.LENGTH_SHORT).show();
+						 	return;
+						 }
+												mDrawOnTop.debugCubeInts();
+						 */
 						captureButton.setVisibility(Button.INVISIBLE);
 						skipButton.setVisibility(Button.VISIBLE);
 						dialog.setText("");
@@ -139,8 +136,8 @@ public class SolverActivity extends Activity{
 
 						mRubiksAlgorithm.execute();
 					}
-					displayInstructions(phase);
-					phase++;
+					displayInstructions(face);
+					face++;
 					captureButton.setText("Capture");
 
 				}
@@ -149,16 +146,17 @@ public class SolverActivity extends Activity{
 
 		});
 
-		setContentView(mPreview);
+		setContentView(mCameraView);
 		addContentView(mDrawOnTop, new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
 		addContentView(captureButton, new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
 		addContentView(skipButton, new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
 		addContentView(dialog, new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
-		addContentView(mColorPalette, new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+//		addContentView(mColorPalette, new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
 		
-		mColorPalette.addSelf();
+//		mColorPalette.addSelf();
 		mArrowManager.initializeArrows();
 
+		// Initializes 9 ColorToggleButtons
 		for(int i = 0; i < colorToggles.length; i++){
 			for(int j = 0; j < colorToggles[i].length; j++){
 				colorToggles[i][j] = new ColorToggleButton(this);
@@ -174,17 +172,24 @@ public class SolverActivity extends Activity{
 		mRubiksAlgorithm.setHandler(mHandler);
 	}
 	
+	/**
+	 * 
+	 * @param face
+	 */
 	public void enableColorSelection(int face){
 		for(int i = 0; i < colorToggles.length; i++){
 			for(int j = 0; j < colorToggles[i].length; j++){
 				colorToggles[i][j].setState(current.getSquare(face, i, j));
-				//				Log.e("cgs", "" +current.getSquare(face, i, j));
 				colorToggles[i][j].setText(colorToggles[i][j].getColor());
 				colorToggles[i][j].setVisibility(Button.VISIBLE);
 			}
 		}
 	}
 
+	/**
+	 * 
+	 * @param face
+	 */
 	public void disableColorSelection(int face){
 		for(int i = 0; i < colorToggles.length; i++){
 			for(int j = 0; j < colorToggles[i].length; j++){

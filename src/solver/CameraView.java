@@ -2,33 +2,27 @@ package solver;
 
 import java.io.IOException;
 import java.util.List;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.hardware.Camera;
 import android.hardware.Camera.Parameters;
 import android.hardware.Camera.PreviewCallback;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
-import android.view.View.OnTouchListener;
-import android.view.View.OnClickListener;
 
 /**
  * A view that pulls data from the phone camera and displays it on screen
  * This is the main view of SolverActivity
- * 
  * Feeds data to a mDrawOnTop (TODO: Rename DrawOnTop to a more descriptive name)
  * 
- * @author andy and that Stanford thing
+ * @author Andy Zhang and that Stanford thing
  */
 public class CameraView extends SurfaceView implements SurfaceHolder.Callback{
-	SurfaceHolder mHolder;
-	Camera mCamera;
-	DrawOnTop mDrawOnTop;
-	boolean mFinished;
+	private Camera mCamera;
+	private DrawOnTop mDrawOnTop;
+	private boolean mFinished;
 
 	public CameraView(Context context, DrawOnTop drawOnTop) {
 		super(context);
@@ -38,7 +32,7 @@ public class CameraView extends SurfaceView implements SurfaceHolder.Callback{
 
 		// Install a SurfaceHolder.Callback so we get notified when the
 		// underlying surface is created and destroyed.
-		mHolder = getHolder();
+		SurfaceHolder mHolder = getHolder();
 		mHolder.addCallback(this);
 		//	mHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
 		
@@ -50,6 +44,7 @@ public class CameraView extends SurfaceView implements SurfaceHolder.Callback{
 	    });
 	}
 
+	@Override
 	public void surfaceCreated(SurfaceHolder holder) {
 		mCamera = Camera.open();
 		Camera.Parameters mParams = mCamera.getParameters();
@@ -76,13 +71,11 @@ public class CameraView extends SurfaceView implements SurfaceHolder.Callback{
 
 			// Preview callback used whenever new viewfinder frame is available
 			mCamera.setPreviewCallback(new PreviewCallback() {
-				public void onPreviewFrame(byte[] data, Camera camera)
-				{
-					if ( (mDrawOnTop == null) || mFinished )
+				public void onPreviewFrame(byte[] data, Camera camera) {
+					if ((mDrawOnTop == null) || mFinished )
 						return;
 
-					if (mDrawOnTop.mBitmap == null)
-					{
+					if (mDrawOnTop.mBitmap == null) {
 						// Initialize the draw-on-top companion
 						Camera.Parameters params = camera.getParameters();
 						mDrawOnTop.mImageWidth = params.getPreviewSize().width;
@@ -96,6 +89,7 @@ public class CameraView extends SurfaceView implements SurfaceHolder.Callback{
 					// Pass YUV data to draw-on-top companion
 					System.arraycopy(data, 0, mDrawOnTop.mYUVData, 0, data.length);
 					mDrawOnTop.invalidate();
+					
 					try {
 						Thread.sleep(50);
 					} catch (InterruptedException e) {
@@ -111,6 +105,7 @@ public class CameraView extends SurfaceView implements SurfaceHolder.Callback{
 		}
 	}
 
+	@Override
 	public void surfaceDestroyed(SurfaceHolder holder) {
 		// Surface will be destroyed when we return, so stop the preview.
 		// Because the CameraDevice object is not a shared resource, it's very
@@ -122,6 +117,7 @@ public class CameraView extends SurfaceView implements SurfaceHolder.Callback{
 		mCamera = null;
 	}
 
+	@Override
 	public void surfaceChanged(SurfaceHolder holder, int format, int w, int h) {
 		// Now that the size is known, set up the camera parameters and begin
 		// the preview.

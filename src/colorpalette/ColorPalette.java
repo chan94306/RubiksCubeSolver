@@ -1,5 +1,6 @@
-package solver;
+package colorpalette;
 
+import solver.*;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -9,7 +10,12 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageView;
 import andy_andrew.rubiks.R;
 
-public class ColorPalette extends View{
+/**
+ * 
+ * @author andy
+ *
+ */
+public class ColorPalette extends View {
 	
 	private SolverActivity mSolverActivity;
 	private PaletteButton[] palette = new PaletteButton[6];

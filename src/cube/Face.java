@@ -1,7 +1,7 @@
 package cube;
 
 /**
- * Is this even being used? -Andy
+ * Not currently being used.
  *
  */
 public class Face {

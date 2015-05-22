@@ -12,34 +12,28 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+/**
+ * View that displays 
+ * @author Andy Zhang
+ *
+ */
 public class DrawOnTop extends View {
 	private Paint[][] paintGrid = new Paint[3][3];
-	// private boolean captureButton = false, continueButton = false;
+	private Paint mPaintRed;
+
 	private final int MARGIN = 10;
+
 	@SuppressLint("UseSparseArrays")
 	private HashMap<Integer, Integer> colorMap = new HashMap<Integer, Integer>();
 
-	private Cube current;
-
-	// /// get rid of some of these later
+	// These are initialized in CameraView
 	public Bitmap mBitmap;
-	private static Paint mPaintBlack;
-	private Paint mPaintYellow;
-	private Paint mPaintRed;
-	private Paint mPaintGreen;
-	private Paint mPaintBlue;
-
-	public byte[] mYUVData;
+	public byte[] mYUVData;		// This gets data from CameraView
 	public int[] mRGBData;
-
-	public int mImageWidth, mImageHeight; // Set by the Preview
-
-	private Context context;
+	public int mImageWidth, mImageHeight;
 
 	public DrawOnTop(Context context, Cube current) {
 		super(context);
-		this.context = context;
-		this.current = current;
 
 		// Creates a bunch of paints that fill an area by default
 		for (int i = 0; i < paintGrid.length; i++) {
@@ -49,35 +43,10 @@ public class DrawOnTop extends View {
 			}
 		}
 
-		mPaintBlack = new Paint();
-		mPaintBlack.setStyle(Paint.Style.STROKE);
-		mPaintBlack.setColor(Color.BLACK);
-		mPaintBlack.setTextSize(25);
-
-		mPaintYellow = new Paint();
-		mPaintYellow.setStyle(Paint.Style.STROKE);
-		mPaintYellow.setColor(Color.YELLOW);
-		mPaintYellow.setTextSize(25);
-
 		mPaintRed = new Paint();
 		mPaintRed.setStyle(Paint.Style.STROKE);
 		mPaintRed.setColor(Color.RED);
 		mPaintRed.setTextSize(25);
-
-		mPaintGreen = new Paint();
-		mPaintGreen.setStyle(Paint.Style.STROKE);
-		mPaintGreen.setColor(Color.GREEN);
-		mPaintGreen.setTextSize(25);
-
-		mPaintBlue = new Paint();
-		mPaintBlue.setStyle(Paint.Style.STROKE);
-		mPaintBlue.setColor(Color.BLUE);
-		mPaintBlue.setTextSize(25);
-
-		mBitmap = null;
-		mYUVData = null;
-		mRGBData = null;
-
 	}
 
 	@Override
@@ -87,8 +56,7 @@ public class DrawOnTop extends View {
 			decodeYUV420SP(mRGBData, mYUVData, mImageWidth, mImageHeight);
 
 			// Draw bitmap
-			mBitmap.setPixels(mRGBData, 0, mImageWidth, 0, 0, mImageWidth,
-					mImageHeight);
+			mBitmap.setPixels(mRGBData, 0, mImageWidth, 0, 0, mImageWidth, mImageHeight);
 
 			getAverageGridPaints();
 			drawGrid(canvas);
@@ -96,24 +64,24 @@ public class DrawOnTop extends View {
 		super.onDraw(canvas);
 	}
 
-	public void debugCubeColors() {
+	public void debugCubeColors(Cube cube) {
 		for (int face = 0; face < 6; face++) {
 			for (int i = 0; i < 3; i++) {
 				String msg = "";
 				for (int j = 0; j < 3; j++) {
-					msg += current.getSquare(face, i, j) + ",";
+					msg += cube.getSquare(face, i, j) + ",";
 				}
 				Log.e("Face: " + face, msg);
 			}
 		}
 	}
 
-	public void debugCubeInts() {
+	public void debugCubeInts(Cube cube) {
 		for (int face = 0; face < 6; face++) {
 			for (int i = 0; i < 3; i++) {
 				String msg = "";
 				for (int j = 0; j < 3; j++) {
-					msg += current.getSquare(face, i, j) + ",";
+					msg += cube.getSquare(face, i, j) + ",";
 
 				}
 				Log.e("Face: " + face, msg);
@@ -121,25 +89,21 @@ public class DrawOnTop extends View {
 		}
 	}
 
-	public void readFace(int face) {
+	public void readFace(int face, Cube cube) {
 		for (int i = 0; i < 3; i++) {
 			for (int j = 0; j < 3; j++) {
-				current.setSquare(face, i, j,
-						getIdealColor(paintGrid[i][j].getColor()));
+				cube.setSquare(face, i, j, getIdealColor(paintGrid[i][j].getColor()));
 			}
 		}
-		current.setColorValue(face, getIdealColor(paintGrid[1][1].getColor()));
-		// Log.e("ideal color for face: " + face, "" +
-		// getIdealColor(paintGrid[1][1].getColor()));
+		cube.setColorValue(face, getIdealColor(paintGrid[1][1].getColor()));
 	}
 
-	// To be completed
+	// TODO: To be completed
 	public int[][] update() {
 		int[][] newFace = new int[3][3];
 		for (int i = 0; i < 3; i++) {
 			for (int j = 0; j < 3; j++) {
-				newFace[i][j] = colorMap.get(getIdealColor(paintGrid[i][j]
-						.getColor()));
+				newFace[i][j] = colorMap.get(getIdealColor(paintGrid[i][j].getColor()));
 			}
 		}
 		// return a 2D array of the face 1 (the face pointed at camera) based on
@@ -203,37 +167,31 @@ public class DrawOnTop extends View {
 		}
 	}
 
-	// Turns the semi-raw Color values + orange into integers 0 to 5, the final
-	// step before solving
+	/**
+	 * Turns the semi-raw Color values + orange into integers 0 to 5, the final
+	 * step before solving
+	 * @param cube the Cube to set the color data
+	 */
 	@SuppressLint("UseSparseArrays")
-	public void recompileCubeColors() {
-
+	public void recompileCubeColors(Cube cube) {
 		for (int face = 0; face < 6; face++) {
-			colorMap.put(current.getColorValue(face), face);
+			colorMap.put(cube.getColorValue(face), face);
 		}
-
-		Log.e("tag", colorMap.toString());
+//		Log.e("tag", colorMap.toString());
 
 		for (int face = 0; face < 6; face++) {
 			for (int i = 0; i < 3; i++) {
 				for (int j = 0; j < 3; j++) {
-					current.setSquare(face, i, j,
-							colorMap.get(current.getSquare(face, i, j)));
+					cube.setSquare(face, i, j, colorMap.get(cube.getSquare(face, i, j)));
 				}
 			}
 		}
 	}
 
-	// OR notify button press
-	// public void notifyCapture(){
-	// captureButton = true;
-	// }
-	//
-	// public void notifyContinue(){
-	// continueButton = true;
-	// }
-
-	// Draws a 3 by 3 grid to show users how to position the cube
+	/**
+	 * Draws a 3x3 grid to show user how to align the cube
+	 * @param canvas Canvas draw the grid on
+	 */
 	public void drawGrid(Canvas canvas) {
 		int squareLength = UIValues.squareLength;
 		int leftBound = UIValues.leftBound;
@@ -262,15 +220,15 @@ public class DrawOnTop extends View {
 		}
 	}
 
-	// sets the squarePaints Paint array with the 9 average colors of the 9
-	// squares of a face
+	/**
+	 * sets the squarePaints Paint array with the 9 average colors of the 9 squares of a face
+	 */
 	public void getAverageGridPaints() {
 		// Bounds of the square, reset every loop of i for the 9 squares
 		double prop = UIValues.GRID_PROPORTION;
 		int leftBound, topBound;
 		int squareLength;
-		int redVal, greenVal, blueVal; // don't actually to explicitly state
-										// these
+		int redVal, greenVal, blueVal; // don't actually to explicitly state these
 		int redMean = 0, greenMean = 0, blueMean = 0;
 
 		for (int m = 0; m < paintGrid.length; m++) {
@@ -301,15 +259,11 @@ public class DrawOnTop extends View {
 				// topMargin + " " + topMargin);
 				for (int j = topBound + MARGIN; j < topBound + squareLength
 						- MARGIN; j++) {
-					int pix = j * mImageWidth + leftBound + MARGIN; // check
-																	// border
-																	// conditions
-																	// !A!!A!
+					int pix = j * mImageWidth + leftBound + MARGIN; // check border conditions
 					for (int i = leftBound + MARGIN; i < leftBound
 							+ squareLength - MARGIN; i++, pix++) {
 						// Log.e("DOT 12/31", "" + pix);
-						redVal = (mRGBData[pix] >> 16) & 0xff; // gets red
-																// component
+						redVal = (mRGBData[pix] >> 16) & 0xff; // gets red component
 						greenVal = (mRGBData[pix] >> 8) & 0xff;
 						blueVal = mRGBData[pix] & 0xff;
 
@@ -328,14 +282,19 @@ public class DrawOnTop extends View {
 				greenMean /= pixArea;
 				blueMean /= pixArea;
 
-				paintGrid[m][n].setARGB((int) 255.0, (int) redMean,
-						(int) greenMean, (int) blueMean);
+				paintGrid[m][n].setARGB((int) 255.0, (int) redMean, (int) greenMean, (int) blueMean);
 			}
 		}
 	}
 
-	static public void decodeYUV420SP(int[] rgb, byte[] yuv420sp, int width,
-			int height) {
+	/**
+	 * Converts YUV to RGB
+	 * @param rgb
+	 * @param yuv420sp
+	 * @param width
+	 * @param height
+	 */
+	static public void decodeYUV420SP(int[] rgb, byte[] yuv420sp, int width, int height) {
 		final int frameSize = width * height;
 
 		for (int j = 0, yp = 0; j < height; j++) {
@@ -372,5 +331,4 @@ public class DrawOnTop extends View {
 			}
 		}
 	}
-
 }
