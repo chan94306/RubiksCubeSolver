@@ -1,5 +1,9 @@
 package cube;
 
+/**
+ * Is this even being used? -Andy
+ *
+ */
 public class Face {
 	public static final int NUM_ROWS = 3;
 	public static final int NUM_COLUMNS = 3;
@@ -47,7 +51,4 @@ public class Face {
 	public int[][] getFace(){
 		return face;
 	}
-	
-	
-
 }

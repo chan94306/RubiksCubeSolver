@@ -18,14 +18,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 import andy_andrew.rubiks.R;
 
-// THIS IS THE MAIN ACTIVITY
+/**
+ * Launched by the start screen. This solves the cube
+ * @author andy
+ *
+ */
 public class SolverActivity extends Activity{    
 	
 //	public int displayWidth, displayHeight;
 //	public static int topBound, leftBound, squareLength;
 //	public static final double GRID_PROPORTION = 0.5;
 	
-	private Preview mPreview;
+	private CameraView mPreview;
 	private DrawOnTop mDrawOnTop;
 	private RubiksAlgorithm mRubiksAlgorithm;
 	private ArrowManager mArrowManager;
@@ -82,7 +86,7 @@ public class SolverActivity extends Activity{
 		// Create our DrawOnTop view.
 		// Create our Preview view and set it as the content of our activity.
 		mDrawOnTop = new DrawOnTop(this, current);
-		mPreview = new Preview(this, mDrawOnTop);
+		mPreview = new CameraView(this, mDrawOnTop);
 		mRubiksAlgorithm = new RubiksAlgorithm(current, future, mDrawOnTop);
 		mArrowManager = new ArrowManager(this);
 

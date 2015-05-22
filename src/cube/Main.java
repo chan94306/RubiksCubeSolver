@@ -1,6 +1,5 @@
 package cube;
 
-
 public class Main {
 
 	final  boolean CW = true;
@@ -9,8 +8,6 @@ public class Main {
 	 Cube future = null;
 
 	public  void main(String[] args) {
-		// TODO Auto-generated method stub
-
 		Cube c = new Cube();
 		//            printArray(current.getFace(4));
 		printCube(c);
@@ -26,6 +23,10 @@ public class Main {
 
 	}
 
+	/**
+	 * Debugging method: prints out a 3x3 array of numbers
+	 * @param a 3x3 integer array to be printed
+	 */
 	public  void printArray(int[][] a){
 		for(int i = 0; i<3; i++){
 			System. out.println(a[i][0] + "" + a[i][1] + "" + a[i][2]);
@@ -33,6 +34,7 @@ public class Main {
 		System. out.println("\n" );
 	}
 
+	
 	public  void printCube(Cube c){
 		for(int i = 0; i<3; i++){
 			System. out.println("    " + current.getFace(5)[i][0]+"" +current.getFace(5)[i][1]+""+ current.getFace(5)[i][2]);
@@ -46,12 +48,12 @@ public class Main {
 		System. out.println("\n" );
 	}
 
-	//To be completed
+	//TODO
 	public  void displayInstructions(boolean CW){
 		//display an arrow to rotate the entire cube
 
 	}
-	//To be completed    
+	//TODO
 	public  void displayInstructions(int face, boolean CW){
 		//display an arrow on a specific row/column to rotate a side
 	}
@@ -65,7 +67,8 @@ public class Main {
 		}
 		return (counter == 9);
 	}
-	//To be completed
+	
+	//TODO
 	public  int[][] update(){
 		//return a 2D array of the face 1 (the face pointed at camera) based on what's currently on the cube
 		//the 2D array will consist of all numbers 0-6, not the RGB value

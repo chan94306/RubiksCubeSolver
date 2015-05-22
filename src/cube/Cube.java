@@ -2,10 +2,7 @@ package cube;
 
 import java.util.Arrays;
 import java.util.HashMap;
-
 import android.util.Log;
-
-
 
 public class Cube implements Cloneable{
 	// private int [][] Left = new int[3][3]; //face value = 0

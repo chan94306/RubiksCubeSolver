@@ -16,13 +16,21 @@ import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.View.OnClickListener;
 
-public class Preview extends SurfaceView implements SurfaceHolder.Callback{
+/**
+ * A view that pulls data from the phone camera and displays it on screen
+ * This is the main view of SolverActivity
+ * 
+ * Feeds data to a mDrawOnTop (TODO: Rename DrawOnTop to a more descriptive name)
+ * 
+ * @author andy and that Stanford thing
+ */
+public class CameraView extends SurfaceView implements SurfaceHolder.Callback{
 	SurfaceHolder mHolder;
 	Camera mCamera;
 	DrawOnTop mDrawOnTop;
 	boolean mFinished;
 
-	Preview(Context context, DrawOnTop drawOnTop) {
+	public CameraView(Context context, DrawOnTop drawOnTop) {
 		super(context);
 
 		mDrawOnTop = drawOnTop;
@@ -131,13 +139,14 @@ public class Preview extends SurfaceView implements SurfaceHolder.Callback{
 	
 	/**
 	 * Sets the resolution of the the Camera.Parameters to a resolution not too much greater than 320x240 
+	 * (in terms of pixel count)
 	 * @param parameters parameters of the Camera object to set resolution
 	 */
 	private void setResolution(Parameters parameters) {
 		// original shitty resolution fixed at 320x240
 		int width = UIValues.displayWidth;
 		int height = UIValues.displayHeight;
-		// 320x240 = 76800
+		// Maximum number of pixels allowed on screen, keeping in mind that 320x240 = 76800
 		int max = 85000;
 		while(width*height > max){
 			width = (int) (0.9*width);

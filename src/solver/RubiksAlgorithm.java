@@ -34,7 +34,6 @@ public class RubiksAlgorithm extends AsyncTask<String, Integer, Void> {
 	@Override
 	protected void onPreExecute() {
 		//TODO : Initialize shit
-
 	}
 
 	// automatically done on worker thread (separated from UI thread)

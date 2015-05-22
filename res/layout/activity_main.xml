@@ -39,7 +39,7 @@
         android:layout_centerHorizontal="true"
         android:layout_below="@id/Title"
         android:layout_marginTop="39dp"
-        android:onClick="goToActivity2"
+        android:onClick="launchSolverActivity"
         android:text="Solve!" />
 
     <Button
