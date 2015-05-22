@@ -1,6 +1,5 @@
 package solver;
 
-
 import cube.Cube;
 import android.content.Context;
 import android.os.AsyncTask;
@@ -13,9 +12,7 @@ import android.widget.Toast;
 
 public class RubiksAlgorithm extends AsyncTask<String, Integer, Void> {
 
-	TextView dialog;
 	private Cube current, future;
-	private Context applicationContext;
 	DrawOnTop mDrawOnTop;
 	private Handler mHandler;
 	private boolean forceSkip = false;
@@ -23,13 +20,10 @@ public class RubiksAlgorithm extends AsyncTask<String, Integer, Void> {
 	private static final boolean CW = true, CCW = false;
 	private static final int REFRESH_RATE = 500;
 
-	public RubiksAlgorithm(TextView dialog, Cube current, Cube future, 
-			DrawOnTop mDrawOnTop, Context applicationContext){
-		this.dialog = dialog;
+	public RubiksAlgorithm(Cube current, Cube future, DrawOnTop mDrawOnTop){
 		this.current = current;
 		this.future = future;
 		this.mDrawOnTop = mDrawOnTop;
-//		this.mHandler = mHandler;
 	}
 	
 	public void setHandler(Handler mHandler){

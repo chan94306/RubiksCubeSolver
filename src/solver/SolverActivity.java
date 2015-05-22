@@ -45,9 +45,18 @@ public class SolverActivity extends Activity{
 		super.onCreate(savedInstanceState);
 		
 		// Hide the window title.
-		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+//		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		//		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		
+		View mDecorView = getWindow().getDecorView();
+		mDecorView.setSystemUiVisibility(
+	            View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+	            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+	            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+	            | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
+	            | View.SYSTEM_UI_FLAG_FULLSCREEN // hide status bar
+	            | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+//		
 		// Get some information about the display
 		Display display = getWindowManager().getDefaultDisplay();
 		Point size = new Point();
@@ -56,20 +65,25 @@ public class SolverActivity extends Activity{
 		UIValues.displayHeight = size.y;
 		UIValues.GRID_PROPORTION = 0.7;
 		UIValues.init();
+		
+		ColorPalette mColorPalette = new ColorPalette(this);
+		
 
 		// Initializes the general-purposes dialog box
 		dialog = new TextView(this);
-		dialog.setTextColor(Color.RED);
-		dialog.setText("Follow rotation instructions, then tap to read face");
+		dialog.setTextColor(Color.BLACK);
+		dialog.setText("Follow rotation instructions. Tap 'Capture' to capture colors");
+		dialog.setBackgroundColor(Color.WHITE);
+		dialog.setAlpha((float) 0.7);
 		dialog.setX(50);
 		dialog.setY(50);
-		dialog.setTextSize(UIValues.displayHeight/30);
+		dialog.setTextSize(UIValues.displayHeight/40);
 
 		// Create our DrawOnTop view.
 		// Create our Preview view and set it as the content of our activity.
 		mDrawOnTop = new DrawOnTop(this, current);
 		mPreview = new Preview(this, mDrawOnTop);
-		mRubiksAlgorithm = new RubiksAlgorithm(dialog, current, future, mDrawOnTop, getApplicationContext());
+		mRubiksAlgorithm = new RubiksAlgorithm(current, future, mDrawOnTop);
 		mArrowManager = new ArrowManager(this);
 
 		// Initializes the skip step button
@@ -88,7 +102,7 @@ public class SolverActivity extends Activity{
 		captureButton = new Button(this);
 		captureButton.setText("Capture");
 		captureButton.setX(size.x - 200);
-		captureButton.setY(0);
+		captureButton.setY(50);
 		captureButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				if(captureButton.getText().equals("Capture")){
@@ -117,6 +131,7 @@ public class SolverActivity extends Activity{
 						captureButton.setVisibility(Button.INVISIBLE);
 						skipButton.setVisibility(Button.VISIBLE);
 						dialog.setText("");
+						dialog.setVisibility(View.INVISIBLE);
 
 						mRubiksAlgorithm.execute();
 					}
@@ -135,6 +150,9 @@ public class SolverActivity extends Activity{
 		addContentView(captureButton, new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
 		addContentView(skipButton, new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
 		addContentView(dialog, new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+		addContentView(mColorPalette, new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+		
+		mColorPalette.addSelf();
 		mArrowManager.initializeArrows();
 
 		for(int i = 0; i < colorToggles.length; i++){

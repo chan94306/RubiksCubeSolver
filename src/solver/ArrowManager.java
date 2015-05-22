@@ -104,7 +104,7 @@ public class ArrowManager {
 			cubeArrows[i].setImageResource(R.drawable.cubearrow);
 			cubeArrows[i].setRotation(i*90);
 			mSolverActivity.addContentView(cubeArrows[i], p);
-			centerImage(cubeArrows[i], UIValues.displayWidth/2, UIValues.displayHeight/2);
+			UIValues.centerImage(cubeArrows[i], UIValues.displayWidth/2, UIValues.displayHeight/2);
 			cubeArrows[i].setImageAlpha(alpha);
 		}
 		
@@ -120,29 +120,7 @@ public class ArrowManager {
 	}
 	
 	private void centerOnGrid(ImageView img, int i, int j) {
-		centerImage(img, UIValues.displayWidth/2+i*UIValues.squareLength, UIValues.displayHeight/2+j*UIValues.squareLength);
-	}
-	
-	/**
-	 * Center an ImageView on a specified point
-	 * (Sets the center of the img to (x, y))
-	 * @param img ImageView to be centered
-	 * @param x x-coordinate of the point to which img will be centered
-	 * @param y y-coordinate of the point to which img will be centered
-	 */
-	public void centerImage(ImageView img, int x, int y){
-//		Log.e("img", "" + img.getLayoutParams().width + " " + img.getLayoutParams().height);
-//		Log.e("img2", "" + img.getMeasuredHeight() + " " + img.getMeasuredHeight());
-		int rot = (int) img.getRotation();
-		
-		// if it's 90 +/- 180
-		if(rot%90 == 0 && rot%180 != 0){
-			img.setX(x - img.getLayoutParams().height/2);
-			img.setY(y - img.getLayoutParams().width/2);
-		}else{
-			img.setX(x - img.getLayoutParams().width/2);
-			img.setY(y - img.getLayoutParams().height/2);
-		}
+		UIValues.centerImage(img, UIValues.displayWidth/2+i*UIValues.squareLength, UIValues.displayHeight/2+j*UIValues.squareLength);
 	}
 
 	/**

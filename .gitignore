@@ -2,6 +2,7 @@
 ## Andy's custom additions
 #################
 .DS_Store
+*.DS_Store
 *.class
 *.apk
 *.dex
