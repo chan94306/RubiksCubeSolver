@@ -1,4 +1,12 @@
 #################
+## Andy's custom additions
+#################
+.DS_Store
+*.class
+*.apk
+*.dex
+
+#################
 ## Eclipse
 #################
 
