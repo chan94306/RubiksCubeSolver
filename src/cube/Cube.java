@@ -1,5 +1,7 @@
 package cube;
 
+import grid.GridView;
+
 import java.util.Arrays;
 import java.util.HashMap;
 import android.util.Log;
@@ -34,7 +36,6 @@ public class Cube implements Cloneable{
 	private int algorithmCounter = 0;
 	public static final boolean CW = true; //Clockwise
 	public static final boolean CCW = false; //Counterclockwise
-	//     boolean solved = false;
 	private HashMap<Integer, Integer> colorMap = new HashMap<Integer, Integer>();
 
 	//Cube constructors and array manipulators
@@ -76,6 +77,25 @@ public class Cube implements Cloneable{
 			}
 			setColorValue(f, getColorValue(f));
 		}
+	}
+	
+	/**
+	 * @author Andy
+	 * Sets the colors of the specified face to to colors in the GridView
+	 * Sets the the color of the face to be the color of the middle cell of grid
+	 * Throw an error if the GridView has an improper color for a cell, eg. Color.BLACK
+	 * Originally this was done in DrawOnTop.readFace((int) face, (Cube) current)
+	 * TODO: make sure i, j are correct in for loops
+	 * @param face Face of the cube [0, 5]
+	 * @param grid GridView object, hopefully with ideal colors for all 9 cells
+	 */
+	public void setFaceColors(int face, GridView grid) {
+		for (int i = 0; i < 3; i++) {
+			for (int j = 0; j < 3; j++) {
+				setSquare(face, i, j, grid.getFillColor(i, j));
+			}
+		}
+		setColorValue(face, grid.getFillColor(1, 1));
 	}
 	
 
@@ -463,8 +483,10 @@ public class Cube implements Cloneable{
 		}
 	}
 
+	/**
+	 * TODO:Needs a more descriptive name!
+	 */
 	public void reMap() {
-
 		colorMap = new HashMap<Integer, Integer>();
 
 		for(int face = 0; face < 6; face++){

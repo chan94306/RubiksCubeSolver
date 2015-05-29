@@ -1,5 +1,6 @@
 package solver;
 
+import grid.CameraGridView;
 import cube.Cube;
 import android.content.Context;
 import android.os.AsyncTask;
@@ -13,17 +14,18 @@ import android.widget.Toast;
 public class RubiksAlgorithm extends AsyncTask<String, Integer, Void> {
 
 	private Cube current, future;
-	DrawOnTop mDrawOnTop;
+	private CameraGridView mCameraGridView;
 	private Handler mHandler;
 	private boolean forceSkip = false;
 
 	private static final boolean CW = true, CCW = false;
 	private static final int REFRESH_RATE = 500;
 
-	public RubiksAlgorithm(Cube current, Cube future, DrawOnTop mDrawOnTop){
+	public RubiksAlgorithm(Cube current, Cube future, CameraGridView cgv){
 		this.current = current;
 		this.future = future;
-		this.mDrawOnTop = mDrawOnTop;
+		this.mCameraGridView = cgv;
+//		this.mDrawOnTop = mDrawOnTop;
 	}
 	
 	public void setHandler(Handler mHandler){
@@ -200,7 +202,8 @@ public class RubiksAlgorithm extends AsyncTask<String, Integer, Void> {
 //		for(int i = 0; i<6; i++) printArray(future.getFace(i));
 
 		while(!sameFace(cFace, fFace) && !forceSkip){
-			cFace = mDrawOnTop.update();
+//			cFace = mDrawOnTop.update();
+			cFace = mCameraGridView.update();
 			try {
 				Thread.sleep(REFRESH_RATE);
 
@@ -245,7 +248,8 @@ public class RubiksAlgorithm extends AsyncTask<String, Integer, Void> {
 //		printArray(future.getFace(1));
 
 		while(!sameFace(cFace, fFace) && !forceSkip){
-			cFace = mDrawOnTop.update();
+//			cFace = mDrawOnTop.update();
+			cFace = mCameraGridView.update();
 //			Log.e("sameFace", "current");
 //			printArray(current.getFace(1));
 			try {

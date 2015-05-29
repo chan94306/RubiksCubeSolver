@@ -1,5 +1,6 @@
 package solver;
 
+import grid.CameraGridView;
 import cube.Cube;
 import colorpalette.*;
 import colortogglebutton.ColorToggleButton;
@@ -22,13 +23,14 @@ import android.widget.Toast;
  * Models:
  * Views:
  * Controllers:
- * @author andy
+ * @author Andy Zhang
  *
  */
 public class SolverActivity extends Activity{    
 	
 	private CameraView mCameraView;
-	private DrawOnTop mDrawOnTop;
+	private CameraGridView mCameraGridView;
+//	private DrawOnTop mDrawOnTop;
 	private RubiksAlgorithm mRubiksAlgorithm;
 	private ArrowManager mArrowManager;
 
@@ -83,9 +85,9 @@ public class SolverActivity extends Activity{
 
 		// Create our DrawOnTop view.
 		// Create our Preview view and set it as the content of our activity.
-		mDrawOnTop = new DrawOnTop(this, current);
-		mCameraView = new CameraView(this, mDrawOnTop);
-		mRubiksAlgorithm = new RubiksAlgorithm(current, future, mDrawOnTop);
+//		mDrawOnTop = new DrawOnTop(this);
+		mCameraView = new CameraView(this, mCameraGridView);
+		mRubiksAlgorithm = new RubiksAlgorithm(current, future, mCameraGridView);
 		mArrowManager = new ArrowManager(this);
 
 		// Initializes the skip step button
@@ -101,24 +103,31 @@ public class SolverActivity extends Activity{
 		});
 
 		// Initializes the capture button
-		captureButton = new Button(this);
-		captureButton.setText("Capture");
-		captureButton.setX(size.x - 200);
-		captureButton.setY(50);
+		captureButton = new CaptureButton(this, size.x - 200, 50);
 		captureButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				if(captureButton.getText().equals("Capture")){
-					mDrawOnTop.readFace(face, current);
+					mCameraView.disableData();
+					mCameraGridView.updateToIdealColors();
+//					mCameraGridView.readFace(face, current);
+					
+					// enablePalette() once palette is implemented
 					enableColorSelection(face);
-					captureButton.setText("Continue");
-				}else{
+					captureButton.setText("Confirm");
+				}else{ // User taps "Confirm"
+					mCameraView.enableData();
+					// 
+					current.setFaceColors(face, mCameraGridView);
 					disableColorSelection(face);
 
 					if(face == 5){
 						//						mDrawOnTop.debugCubeColors();
-						mDrawOnTop.recompileCubeColors(current);
+						
+						current.reMap();	// Replaces the next line. See DrawOnTop.recompileCubeColors and Cube.reMap
+//						mDrawOnTop.recompileCubeColors(current);
+						
 						/*
-						 //TODO: Re-enable this error check for user
+						 //TODO: Re-enable this error check for user! Double check to make sure everything is reset
 						 if(!current.isValidCube()){
 						 	mDrawOnTop.setPhase(0);
 						 	captureButton.setText("Capture");
@@ -127,7 +136,7 @@ public class SolverActivity extends Activity{
 						 	Toast.makeText(getApplicationContext(), "You screwed up. Reread cube faces.", Toast.LENGTH_SHORT).show();
 						 	return;
 						 }
-												mDrawOnTop.debugCubeInts();
+//						mDrawOnTop.debugCubeInts();
 						 */
 						captureButton.setVisibility(Button.INVISIBLE);
 						skipButton.setVisibility(Button.VISIBLE);
@@ -147,11 +156,15 @@ public class SolverActivity extends Activity{
 		});
 
 		setContentView(mCameraView);
-		addContentView(mDrawOnTop, new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
-		addContentView(captureButton, new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
-		addContentView(skipButton, new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
-		addContentView(dialog, new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
-//		addContentView(mColorPalette, new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+		
+		LayoutParams wrapContent = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+		
+//		addContentView(mDrawOnTop, wrapContent);
+		addContentView(captureButton, wrapContent);
+		addContentView(skipButton, wrapContent);
+		addContentView(dialog, wrapContent);
+//		addContentView(mColorPalette, wrapContent);
+		addContentView(mCameraGridView, wrapContent);
 		
 //		mColorPalette.addSelf();
 		mArrowManager.initializeArrows();
@@ -163,7 +176,7 @@ public class SolverActivity extends Activity{
 				colorToggles[i][j].setVisibility(Button.INVISIBLE);
 				colorToggles[i][j].setX(UIValues.leftBound + UIValues.squareLength*j);
 				colorToggles[i][j].setY(UIValues.topBound + UIValues.squareLength*i);
-				addContentView(colorToggles[i][j], new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+				addContentView(colorToggles[i][j], wrapContent);
 			}
 		}
 		
