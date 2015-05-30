@@ -23,7 +23,6 @@ import android.view.View;
  */
 public class CameraView extends SurfaceView implements SurfaceHolder.Callback{
 	private Camera mCamera;
-	//	private DrawOnTop mDrawOnTop;
 	private CameraGridView mCameraGridView;
 	private boolean mFinished;
 	private boolean passData;
@@ -80,15 +79,15 @@ public class CameraView extends SurfaceView implements SurfaceHolder.Callback{
 						return;
 					
 					// If this is the first callback, we need to initialize everything 
-					if (mCameraGridView.imageYUV == null) {
+					if (mCameraGridView.getImageYUV() == null) {
 						Camera.Parameters params = camera.getParameters();
 						mCameraGridView.initImageDimensions(params.getPreviewSize().width, params.getPreviewSize().height);
-						mCameraGridView.imageYUV = new byte[data.length];
+						mCameraGridView.initImageYUV(data.length);
 					}
 					
 					// If we need to pass new data (this is false after Capture button tapped and user selecting colors)
 					if (passData) {
-						System.arraycopy(data, 0, mCameraGridView.imageYUV, 0, data.length);
+						System.arraycopy(data, 0, mCameraGridView.getImageYUV(), 0, data.length);
 						// forces grid to redraw
 						mCameraGridView.invalidate();
 					}

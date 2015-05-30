@@ -203,7 +203,7 @@ public class RubiksAlgorithm extends AsyncTask<String, Integer, Void> {
 
 		while(!sameFace(cFace, fFace) && !forceSkip){
 //			cFace = mDrawOnTop.update();
-			cFace = mCameraGridView.update();
+			cFace = current.update(mCameraGridView);
 			try {
 				Thread.sleep(REFRESH_RATE);
 
@@ -217,7 +217,7 @@ public class RubiksAlgorithm extends AsyncTask<String, Integer, Void> {
 		forceSkip = false;
 		
 		current = new Cube(future);
-		if(face == 6) current.reMap();
+		if(face == 6) current.realignFaces();
 		//		Log.e("solveStep", "ended");
 	}
 
@@ -249,7 +249,7 @@ public class RubiksAlgorithm extends AsyncTask<String, Integer, Void> {
 
 		while(!sameFace(cFace, fFace) && !forceSkip){
 //			cFace = mDrawOnTop.update();
-			cFace = mCameraGridView.update();
+			cFace = current.update(mCameraGridView);
 //			Log.e("sameFace", "current");
 //			printArray(current.getFace(1));
 			try {
@@ -264,8 +264,8 @@ public class RubiksAlgorithm extends AsyncTask<String, Integer, Void> {
 		}
 		forceSkip = false;
 		current = new Cube(future);
-		current.reMap();
-		future.reMap();
+		current.realignFaces();
+		future.realignFaces();
 //		Log.e("sameFace", "current remapped");
 //		printArray(current.getFace(1));
 //		Log.e("sameFace", "future remapped");

@@ -1,9 +1,13 @@
 package cube;
 
+import grid.CameraGridView;
 import grid.GridView;
+import grid.ImageUtilities;
 
 import java.util.Arrays;
 import java.util.HashMap;
+
+import android.annotation.SuppressLint;
 import android.util.Log;
 
 public class Cube implements Cloneable{
@@ -36,7 +40,10 @@ public class Cube implements Cloneable{
 	private int algorithmCounter = 0;
 	public static final boolean CW = true; //Clockwise
 	public static final boolean CCW = false; //Counterclockwise
+
+	@SuppressLint("UseSparseArrays")
 	private HashMap<Integer, Integer> colorMap = new HashMap<Integer, Integer>();
+	private HashMap<Integer, Integer> faceMap = new HashMap<Integer, Integer>();
 
 	//Cube constructors and array manipulators
 
@@ -83,7 +90,7 @@ public class Cube implements Cloneable{
 	 * @author Andy
 	 * Sets the colors of the specified face to to colors in the GridView
 	 * Sets the the color of the face to be the color of the middle cell of grid
-	 * Throw an error if the GridView has an improper color for a cell, eg. Color.BLACK
+	 * TODO: Throw an error if the GridView has an improper color for a cell, eg. Color.BLACK
 	 * Originally this was done in DrawOnTop.readFace((int) face, (Cube) current)
 	 * TODO: make sure i, j are correct in for loops
 	 * @param face Face of the cube [0, 5]
@@ -98,6 +105,43 @@ public class Cube implements Cloneable{
 		setColorValue(face, grid.getFillColor(1, 1));
 	}
 	
+	/**
+	 * This is NOT the same as Cube.realignFaces();
+	 * Turns the semi-raw Color values + orange into integers 0 to 5, 
+	 * the final step before solving
+	 * @param cube the Cube to set the color data
+	 */
+	@SuppressLint("UseSparseArrays")
+	public void convertColorsToInts() {
+		for (int face = 0; face < 6; face++) {
+			colorMap.put(getColorValue(face), face);
+		}
+
+		for (int face = 0; face < 6; face++) {
+			for (int i = 0; i < 3; i++) {
+				for (int j = 0; j < 3; j++) {
+					setSquare(face, i, j, colorMap.get(getSquare(face, i, j)));
+				}
+			}
+		}
+	}
+	
+	// TODO: To be completed/Does this really belong in Cube?
+	public int[][] update(CameraGridView cgv) {
+		int[][] newFace = new int[3][3];
+		for (int i = 0; i < 3; i++) {
+			for (int j = 0; j < 3; j++) {
+				newFace[i][j] = colorMap.get(ImageUtilities.getIdealColor(cgv.getFillColor(i, j)));
+			}
+		}
+		// return a 2D array of the face 1 (the face pointed at camera) based on
+		// what's currently on the cube
+		// the 2D array will consist of all numbers 0-6, not the RGB value
+		// use getColorValue and cleverness to convert from approximate RGB
+		// value to face int value
+		return newFace;
+	}
+	
 
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
@@ -105,7 +149,7 @@ public class Cube implements Cloneable{
 	@Override
 	public String toString() {
 		return "Cube [cube=" + Arrays.toString(cube) + ", RGBColors="
-				+ Arrays.toString(RGBColors) + ", colorMap=" + colorMap + "]";
+				+ Arrays.toString(RGBColors) + ", colorMap=" + faceMap + "]";
 	}
 	
 	
@@ -119,7 +163,7 @@ public class Cube implements Cloneable{
 		int result = 1;
 		result = prime * result + Arrays.hashCode(RGBColors);
 		result = prime * result
-				+ ((colorMap == null) ? 0 : colorMap.hashCode());
+				+ ((faceMap == null) ? 0 : faceMap.hashCode());
 		result = prime * result + Arrays.hashCode(cube);
 		return result;
 	}
@@ -139,11 +183,11 @@ public class Cube implements Cloneable{
 		if (!Arrays.equals(RGBColors, other.RGBColors)) {
 			return false;
 		}
-		if (colorMap == null) {
-			if (other.colorMap != null) {
+		if (faceMap == null) {
+			if (other.faceMap != null) {
 				return false;
 			}
-		} else if (!colorMap.equals(other.colorMap)) {
+		} else if (!faceMap.equals(other.faceMap)) {
 			return false;
 		}
 		if (!Arrays.deepEquals(cube, other.cube)) {
@@ -484,21 +528,23 @@ public class Cube implements Cloneable{
 	}
 
 	/**
+	 * 
+	 * 
 	 * TODO:Needs a more descriptive name!
 	 */
-	public void reMap() {
-		colorMap = new HashMap<Integer, Integer>();
+	public void realignFaces() {
+		faceMap = new HashMap<Integer, Integer>();
 
 		for(int face = 0; face < 6; face++){
-			colorMap.put(cube[face][1][1], face);
+			faceMap.put(cube[face][1][1], face);
 		}
 
-		Log.e("tag", colorMap.toString());
+		Log.e("tag", faceMap.toString());
 
 		for(int face = 0; face < 6; face++){
 			for(int i = 0; i < 3; i++){
 				for(int j = 0; j < 3; j++){
-					cube[face][i][j] = colorMap.get(cube[face][i][j]);
+					cube[face][i][j] = faceMap.get(cube[face][i][j]);
 
 				}
 			}

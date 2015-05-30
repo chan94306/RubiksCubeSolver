@@ -30,13 +30,11 @@ public class SolverActivity extends Activity{
 	
 	private CameraView mCameraView;
 	private CameraGridView mCameraGridView;
-//	private DrawOnTop mDrawOnTop;
 	private RubiksAlgorithm mRubiksAlgorithm;
 	private ArrowManager mArrowManager;
 
 	private final ColorToggleButton[][] colorToggles = new ColorToggleButton[3][3];
 	private TextView dialog;
-//	private ImageView arrowImage;
 	private Button captureButton, skipButton;
 	private Handler mHandler;
 
@@ -123,8 +121,8 @@ public class SolverActivity extends Activity{
 					if(face == 5){
 						//						mDrawOnTop.debugCubeColors();
 						
-						current.reMap();	// Replaces the next line. See DrawOnTop.recompileCubeColors and Cube.reMap
-//						mDrawOnTop.recompileCubeColors(current);
+//						current.reMap();	// Incorrectly replaces the next line. See DrawOnTop.recompileCubeColors and Cube.reMap
+						current.convertColorsToInts();
 						
 						/*
 						 //TODO: Re-enable this error check for user! Double check to make sure everything is reset
