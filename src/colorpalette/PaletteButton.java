@@ -12,15 +12,16 @@ import android.widget.Button;
 public class PaletteButton extends Button{
 	
 	private int color;
-	private ColorPalette mColorPalette;
-	private int x, y;
 
-	public PaletteButton(Context context, ColorPalette cp, int clr) {
+	public PaletteButton(Context context, final ColorPalette colorPalette, int color) {
 		super(context);
-		color = clr;
-		mColorPalette = cp;
+		this.color = color;
 		
-		
+		setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				colorPalette.notifyColorSelection(getColor(), getX(), getY());
+			}
+		});
 	}
 	
 	public int getColor(){

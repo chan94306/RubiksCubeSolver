@@ -13,7 +13,7 @@ import android.view.View;
 import android.widget.Toast;
 
 /**
- * View that displays some random shit ugh
+ * View that displays some random shit but isn't used anymore
  * @author Andy Zhang
  *
  */

@@ -34,6 +34,7 @@ public class SolverActivity extends Activity{
 	private ArrowManager mArrowManager;
 
 	private final ColorToggleButton[][] colorToggles = new ColorToggleButton[3][3];
+	private ColorPalette mColorPalette;
 	private TextView dialog;
 	private Button captureButton, skipButton;
 	private Handler mHandler;
@@ -68,9 +69,6 @@ public class SolverActivity extends Activity{
 		UIValues.GRID_PROPORTION = 0.7;
 		UIValues.init();
 		
-//		ColorPalette mColorPalette = new ColorPalette(this);
-		
-
 		// Initializes the general-purposes dialog box
 		dialog = new TextView(this);
 		dialog.setTextColor(Color.BLACK);
@@ -87,6 +85,7 @@ public class SolverActivity extends Activity{
 		mCameraView = new CameraView(this, mCameraGridView);
 		mRubiksAlgorithm = new RubiksAlgorithm(current, future, mCameraGridView);
 		mArrowManager = new ArrowManager(this);
+		mColorPalette = new ColorPalette(this);
 
 		// Initializes the skip step button
 		skipButton = new Button(this);
@@ -109,14 +108,13 @@ public class SolverActivity extends Activity{
 					mCameraGridView.updateToIdealColors();
 //					mCameraGridView.readFace(face, current);
 					
-					// enablePalette() once palette is implemented
-					enableColorSelection(face);
+					enableColorPalette(face);
 					captureButton.setText("Confirm");
 				}else{ // User taps "Confirm"
 					mCameraView.enableData();
 					// 
 					current.setFaceColors(face, mCameraGridView);
-					disableColorSelection(face);
+					disableColorPalette(face);
 
 					if(face == 5){
 						//						mDrawOnTop.debugCubeColors();
@@ -164,7 +162,7 @@ public class SolverActivity extends Activity{
 //		addContentView(mColorPalette, wrapContent);
 		addContentView(mCameraGridView, wrapContent);
 		
-//		mColorPalette.addSelf();
+		mColorPalette.addSelf();
 		mArrowManager.initializeArrows();
 
 		// Initializes 9 ColorToggleButtons
@@ -184,9 +182,24 @@ public class SolverActivity extends Activity{
 	}
 	
 	/**
-	 * 
-	 * @param face
+	 * Makes the Color Palette visible, allowing users to modify the colors of the CameraGridView
+	 * @param face TODO: remove this argument if unnecessary
 	 */
+	public void enableColorPalette(int face){
+		mColorPalette.setPaletteVisibility(View.VISIBLE);
+	}
+
+	/**
+	 * Makes the Color Palette visible, preventing users from modifying the colors of the CameraGridView
+	 * @param face TODO: remove this argument if unnecessary
+	 */
+	public void disableColorPalette(int face){
+		mColorPalette.setPaletteVisibility(View.INVISIBLE);
+	}
+	
+	
+	/*
+	 * For ColorToggleButtons
 	public void enableColorSelection(int face){
 		for(int i = 0; i < colorToggles.length; i++){
 			for(int j = 0; j < colorToggles[i].length; j++){
@@ -197,10 +210,6 @@ public class SolverActivity extends Activity{
 		}
 	}
 
-	/**
-	 * 
-	 * @param face
-	 */
 	public void disableColorSelection(int face){
 		for(int i = 0; i < colorToggles.length; i++){
 			for(int j = 0; j < colorToggles[i].length; j++){
@@ -208,11 +217,9 @@ public class SolverActivity extends Activity{
 				colorToggles[i][j].setVisibility(Button.INVISIBLE);
 			}
 		}
-
 		current.setColorValue(face, colorToggles[1][1].getRawColorInt());
-		//		Log.e("face color", "" + colorToggles[1][1].getRawColorInt());
 	}
-	
+	*/
 	public void displayInstructions(int face){
 		mArrowManager.clearArrows();
 		
