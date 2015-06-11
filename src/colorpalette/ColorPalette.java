@@ -12,29 +12,27 @@ import andy_andrew.rubiks.R;
 
 /**
  * 
- * @author andy
+ * @author Andy Zhang
  *
  */
 public class ColorPalette extends View {
 	
-	private SolverActivity mSolverActivity;
 	private PaletteButton[] colors = new PaletteButton[6];
-	private int selectedColor = -1;
+	private int selectedColor = 0;	// This is "clear" (alpha is 0). Cannot use -1 because that is Color.WHITE (0xffffffff)
 	private ImageView selector;
 	
 	private int squareLength;
 
 	public ColorPalette(Context context) {
 		super(context);
-		this.mSolverActivity = (SolverActivity) context;
-
+		
 		colors[0] = new PaletteButton(context, this, UIValues.red);
 		colors[1] = new PaletteButton(context, this, UIValues.orange);
 		colors[2] = new PaletteButton(context, this, UIValues.yellow);
 		colors[3] = new PaletteButton(context, this, UIValues.green);
 		colors[4] = new PaletteButton(context, this, UIValues.blue);
 		colors[5] = new PaletteButton(context, this, UIValues.white);
-				
+		
 		int topMargin, leftMargin;
 		
 		if(UIValues.displayHeight < UIValues.displayWidth){ //landscape orientation
@@ -65,7 +63,7 @@ public class ColorPalette extends View {
 		// TODO: draw what is necessary. selector? 
 	}
 
-	public void addSelf() {
+	public void addSelf(SolverActivity mSolverActivity) {
 		LayoutParams lp = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 		for(int i = 0; i < colors.length; i++){
 			mSolverActivity.addContentView(colors[i], lp);
@@ -88,4 +86,7 @@ public class ColorPalette extends View {
 		selector.setY(y);
 	}
 	
+	public int getSelectedColor() {
+		return selectedColor;
+	}
 }

@@ -9,7 +9,7 @@ import android.widget.Button;
  * @author andy
  *
  */
-public class PaletteButton extends Button{
+public class PaletteButton extends Button {
 	
 	private int color;
 
@@ -27,5 +27,4 @@ public class PaletteButton extends Button{
 	public int getColor(){
 		return color;
 	}
-	
 }

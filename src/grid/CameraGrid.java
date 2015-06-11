@@ -1,5 +1,7 @@
 package grid;
 
+import android.util.Log;
+
 public class CameraGrid extends Grid{
 	
 	// Height and width of the image provided by the camera, from CameraView
@@ -34,11 +36,15 @@ public class CameraGrid extends Grid{
 	
 	public void updateToIdealColors() {
 		int idealColor;
+		String debug = "";
 		for (int i = 0; i < length; i++) {
 			for (int j = 0; j < length; j++) {
 				idealColor = ImageUtilities.getIdealColor(getFillColor(i, j));
 				setFillColor(i, j, idealColor);
+				debug += idealColor + " ";
 			}
+			debug += "\n";
 		}
+		Log.e("", debug);
 	}
 }

@@ -9,6 +9,7 @@ import android.graphics.RectF;
  *
  */
 public class Cell {
+	// Must be RectF instead of Rect to support Canvas.drawRoundRect()
 	RectF edge;
 	RectF fill;
 	Paint fillPaint;

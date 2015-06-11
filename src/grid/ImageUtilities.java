@@ -1,13 +1,14 @@
 package grid;
 
 import android.graphics.Color;
+import android.util.Log;
 import solver.UIValues;
 
 /**
  * Contains static methods used to process the camera image input into
  * 1. Data to be displayed
  * 2. Data to be inputted into the Cube model
- * @author andy
+ * @author Andy Zhang
  *
  */
 public class ImageUtilities {
@@ -33,31 +34,24 @@ public class ImageUtilities {
 
 		// if saturation is close to 0 and value is close to 1, then white-ish
 		if (hsv[1] < 0.4 && hsv[2] > 0.6) {
-			// Log.e("ideal", "WHITE");
 			return Color.WHITE;
 		}
 		// else use hue to determine spectrum color
 		else {
 			if (hsv[0] >= 0 && hsv[0] < 15) {
-				// Log.e("ideal", "RED");
 				return Color.RED;
 			} else if (hsv[0] >= 15 && hsv[0] < 45) {
-				// Log.e("ideal", "ORANGE_0xFF8800");
-				return 0xFF8800; // ORANGE
+				return 0xFFFF8800; // ORANGE
 			} else if (hsv[0] >= 45 && hsv[0] < 90) {
-				// Log.e("ideal", "YELLOW");
 				return Color.YELLOW;
 			} else if (hsv[0] >= 90 && hsv[0] < 180) {
-				// Log.e("ideal", "GREEN");
 				return Color.GREEN;
 			} else if (hsv[0] >= 180 && hsv[0] < 300) {
-				// Log.e("ideal", "BLUE");
 				return Color.BLUE;
 			} else if (hsv[0] >= 300 && hsv[0] < 360) {
-				// Log.e("ideal", "RED");
 				return Color.RED;
 			} else {
-				// Log.e("ideal", "BLACK- something went wrong");
+				Log.e("ideal color", "BLACK- something went wrong");
 				return Color.BLACK; // something went wrong in this case
 			}
 		}

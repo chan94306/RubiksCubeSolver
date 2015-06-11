@@ -5,7 +5,7 @@ import android.graphics.RectF;
 
 /**
  * 3x3 Grid Model
- * @author andy
+ * @author Andy Zhang
  *
  */
 public class Grid {
@@ -21,7 +21,7 @@ public class Grid {
 	 * @param margin
 	 */
 	public Grid(int x, int y, int ds, int margin) {
-		// TODO Auto-generated constructor stub
+		cells = new Cell[3][3];
 		
 		for (int i = 0; i < length; i++) {
 			for (int j = 0; j < length; j++) {

@@ -7,6 +7,9 @@ import colortogglebutton.ColorToggleButton;
 import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.Point;
+import android.graphics.Rect;
+import android.graphics.RectF;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -82,6 +85,7 @@ public class SolverActivity extends Activity{
 		// Create our DrawOnTop view.
 		// Create our Preview view and set it as the content of our activity.
 //		mDrawOnTop = new DrawOnTop(this);
+		mCameraGridView = new CameraGridView(this);
 		mCameraView = new CameraView(this, mCameraGridView);
 		mRubiksAlgorithm = new RubiksAlgorithm(current, future, mCameraGridView);
 		mArrowManager = new ArrowManager(this);
@@ -105,16 +109,18 @@ public class SolverActivity extends Activity{
 			public void onClick(View v) {
 				if(captureButton.getText().equals("Capture")){
 					mCameraView.disableData();
+					mCameraGridView.disableUpdatePaints();
 					mCameraGridView.updateToIdealColors();
 //					mCameraGridView.readFace(face, current);
 					
 					enableColorPalette(face);
 					captureButton.setText("Confirm");
 				}else{ // User taps "Confirm"
-					mCameraView.enableData();
 					// 
 					current.setFaceColors(face, mCameraGridView);
 					disableColorPalette(face);
+					mCameraView.enableData();
+					mCameraGridView.enableUpdatePaints();
 
 					if(face == 5){
 						//						mDrawOnTop.debugCubeColors();
@@ -162,7 +168,7 @@ public class SolverActivity extends Activity{
 //		addContentView(mColorPalette, wrapContent);
 		addContentView(mCameraGridView, wrapContent);
 		
-		mColorPalette.addSelf();
+		mColorPalette.addSelf(this);
 		mArrowManager.initializeArrows();
 
 		// Initializes 9 ColorToggleButtons

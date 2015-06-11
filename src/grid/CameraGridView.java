@@ -4,18 +4,21 @@ import solver.UIValues;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.util.Log;
 
 public class CameraGridView extends GridView {
+	private boolean updatePaints = true;
 	
 	public CameraGridView(Context context) {
-		// TODO: WHY IS IT RED?
-		super(context, UIValues.leftBound, UIValues.topBound, UIValues.squareLength, 10, 15, UIValues.squareLength/8, Color.RED, false);
+		super(context, UIValues.leftBound, UIValues.topBound, UIValues.squareLength, 10, 15, UIValues.squareLength/8, Color.BLACK, false);
 		grid = new CameraGrid(UIValues.leftBound, UIValues.topBound, UIValues.squareLength, margin);
 	}
 	
 	@Override
 	protected void onDraw(Canvas canvas) {
-		((CameraGrid) grid).updatePaints();
+		if (updatePaints) {
+			((CameraGrid) grid).updatePaints();
+		}
 		super.onDraw(canvas);
 	}
 	
@@ -32,6 +35,7 @@ public class CameraGridView extends GridView {
 
 	public void updateToIdealColors() {
 		((CameraGrid) grid).updateToIdealColors();
+		invalidate();
 	}
 	
 	public byte[] getImageYUV() {
@@ -40,5 +44,13 @@ public class CameraGridView extends GridView {
 	
 	public void initImageYUV(int length) {
 		((CameraGrid) grid).imageYUV = new byte[length]; 
+	}
+	
+	public void enableUpdatePaints() {
+		updatePaints = true;
+	}
+	
+	public void disableUpdatePaints() {
+		updatePaints = false;
 	}
 }
