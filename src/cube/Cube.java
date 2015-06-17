@@ -42,7 +42,10 @@ public class Cube implements Cloneable{
 	public static final boolean CCW = false; //Counterclockwise
 
 	@SuppressLint("UseSparseArrays")
+    // colorMap is a map for RGB value to 0-5.
 	private HashMap<Integer, Integer> colorMap = new HashMap<Integer, Integer>();
+    // when there is a full cube rotation, because 0 is always on the left, 1
+    // facing user, etc, all int values need to be remapped
 	private HashMap<Integer, Integer> faceMap = new HashMap<Integer, Integer>();
 
 	//Cube constructors and array manipulators
@@ -681,6 +684,7 @@ public class Cube implements Cloneable{
 		if(cube [5][2][0] == 0 || cube[5][2][0] == 1) counter++;
 		if(cube [0][0][2] == 0 || cube[0][0][2] == 1) counter++;
 		if(cube [1][0][0] == 0 || cube[1][0][0] == 1) counter++;
+        // at the end of this block, counter should be incremented twice
 
 		if(cube [5][2][2] == 2 || cube[5][2][2] == 1) counter++;
 		if(cube [2][0][0] == 2 || cube[2][0][0] == 1) counter++;
@@ -713,6 +717,7 @@ public class Cube implements Cloneable{
 		int sameColorVal = 88; //Shared color value
 		int diffColorVal = 88;
 
+        // TODO: do this with a set
 		if(cube [1][0][0] == cube[0][0][0] && cube[1][0][0] != 5){
 			counter++;
 			sameColorVal = cube[1][0][0];
@@ -751,6 +756,7 @@ public class Cube implements Cloneable{
 		}
 
 		if(counter == 1){
+            // change to just grab opposite value
 			if(cube [1][0][0] != 5 && cube[1][0][0] != sameColorVal) diffColorVal = cube[1][0][0];
 			else if (cube [0][0][2] != 5 && cube[0][0][2] != sameColorVal) diffColorVal = cube[0][0][2];
 			else if (cube [5][2][0] != 5 && cube[5][2][0] != sameColorVal) diffColorVal = cube[5][2][0];
@@ -819,6 +825,7 @@ public class Cube implements Cloneable{
 	/**
 	 * Checks if there are non -top face edge pieces on the top layer. For second layer solving usage
 	 *
+     * TODO: rename to, are second layer edges easily available on the top layer
 	 * @return true if there are available edge pieces on the top layer, false otherwise.
 	 */
 	public boolean isEdgesOnTopLayer(){
@@ -969,12 +976,12 @@ public class Cube implements Cloneable{
 	 */
 	public int getColorValue2 (int face){
 		switch(face){
-		case 0: return leftColor ;
-		case 1: return frontColor ;
-		case 2: return rightColor ;
-		case 3: return backColor ;
-		case 4: return bottomColor ;
-		case 5: return topColor ;
+		case 0: return leftColor;
+		case 1: return frontColor;
+		case 2: return rightColor;
+		case 3: return backColor;
+		case 4: return bottomColor;
+		case 5: return topColor;
 		default: return 0;
 		}
 	}

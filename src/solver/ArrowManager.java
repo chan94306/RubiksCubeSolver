@@ -47,6 +47,7 @@ public class ArrowManager {
 		// [0, 255]
 		int alpha = 256*3/4;
 		// This is stupid, but we can't seem to access it anywhere. We can toss this into dimens.xml OR find a smarter way to read it
+        // TODO: figure this out
 		int oHeight = 936;
 		int oWidth = 288;
 		// The height of the arrow image, scaled down to match the size of the grid
@@ -70,6 +71,8 @@ public class ArrowManager {
 		downArrow = faceArrows[2];
 		leftArrow = faceArrows[3];
 		
+        // Do not need to set pivot point of rotation  again because the
+        // transformation is done later anyways
 		downArrow.setRotation(180);
 				
 		rightArrow.setPivotX(height/2);
@@ -96,6 +99,7 @@ public class ArrowManager {
 		CCWArrow.setImageAlpha(alpha);
 
 		// Length of one side of resized cube arrow (currently, cube arrow image is square)
+        // TODO: make 1.5 a constant in UIValues
 		int length = (int) (UIValues.GRID_PROPORTION*Math.min(UIValues.displayWidth, UIValues.displayHeight)/1.5);
 		p = new LayoutParams(length, length);
 		
