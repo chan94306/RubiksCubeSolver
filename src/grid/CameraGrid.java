@@ -2,6 +2,7 @@ package grid;
 
 import android.util.Log;
 
+@Deprecated
 public class CameraGrid extends Grid{
 	
 	// Height and width of the image provided by the camera, from CameraView
@@ -31,7 +32,7 @@ public class CameraGrid extends Grid{
 	public void updatePaints() {
 		// Do color grid logic, then draw grid by calling super's onDraw
 		ImageUtilities.decodeYUV420SP(imageRGB, imageYUV, imageWidth, imageHeight);
-		ImageUtilities.updateAverageGridPaints(this, imageRGB, 10, imageWidth, imageHeight);
+//		ImageUtilities.updateAverageGridPaints(this, imageRGB, 10, imageWidth, imageHeight);
 	}
 	
 	public void updateToIdealColors() {

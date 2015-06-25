@@ -85,11 +85,11 @@ public class SolverActivity extends Activity{
 		// Create our DrawOnTop view.
 		// Create our Preview view and set it as the content of our activity.
 //		mDrawOnTop = new DrawOnTop(this);
-		mCameraGridView = new CameraGridView(this);
+		mColorPalette = new ColorPalette(this);
+		mCameraGridView = new CameraGridView(this, mColorPalette);
 		mCameraView = new CameraView(this, mCameraGridView);
 		mRubiksAlgorithm = new RubiksAlgorithm(current, future, mCameraGridView);
 		mArrowManager = new ArrowManager(this);
-		mColorPalette = new ColorPalette(this);
 
 		// Initializes the skip step button
 		skipButton = new Button(this);
@@ -168,6 +168,7 @@ public class SolverActivity extends Activity{
 //		addContentView(mColorPalette, wrapContent);
 		addContentView(mCameraGridView, wrapContent);
 		
+		mCameraGridView.addCellsToActivity(this);
 		mColorPalette.addSelf(this);
 		mArrowManager.initializeArrows();
 

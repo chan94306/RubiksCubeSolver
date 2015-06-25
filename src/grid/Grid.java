@@ -8,6 +8,7 @@ import android.graphics.RectF;
  * @author Andy Zhang
  *
  */
+@Deprecated
 public class Grid {
 	
 	public final int length = 3;

@@ -1,5 +1,6 @@
 package grid;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -19,44 +20,32 @@ import android.view.View;
  * @author Andy Zhang
  *
  */
-public class GridView extends View {
-	private Paint edgePaint;
-	private int rx;
-	protected Grid grid;
-	protected int margin = 0;
+public abstract class GridView extends View {	
+	protected CellView[][] cells;
 
-	/**
-	 * TODO: document this!
-	 * @param context
-	 * @param x Horizontal coordinate of top left corner
-	 * @param y Vertical coordinate of top left corner
-	 * @param ds Side length of a cell in the grid 
-	 * @param thickness Thickness of the line
-	 * @param rx Radius of roundedness
-	 * @param margin
-	 */
-	public GridView(Context context, int x, int y, int ds, int thickness, int rx, int margin, int color, boolean defaultGrid) {
+//	/**
+//	 * Does not initialize cells, hence abstract!
+//	 * @param context
+//	 * @param x Horizontal coordinate of top left corner
+//	 * @param y Vertical coordinate of top left corner
+//	 * @param cellLength Side length of a cell in the grid 
+//	 * @param thickness Thickness of the line
+//	 * @param rx Radius of roundedness
+//	 * @param margin
+//	 */
+//	public GridView(Context context, int x, int y, int cellLength, int thickness, int rx, int margin, int color) {
+//		super(context);	
+//	}
+	
+	public GridView(Context context) {
 		super(context);
-		
-		if (defaultGrid)
-			this.grid = new Grid(x, y, ds, margin);
-		
-		this.rx = rx;
-		this.margin = margin;
-		
-		edgePaint = new Paint();
-		edgePaint.setStyle(Paint.Style.STROKE);
-		edgePaint.setColor(color);
-		edgePaint.setStrokeWidth(thickness);
 	}
 
 	@Override
 	protected void onDraw(Canvas canvas) {
-		for (int i = 0; i < grid.length; i++) {
-			for (int j = 0; j < grid.length; j++) {
-				// Draw the outer edge, and then the inner fill
-				canvas.drawRoundRect(grid.getEdgeRect(i, j), rx, rx, edgePaint);
-				canvas.drawRoundRect(grid.getFillRect(i, j), rx, rx, grid.getFillPaint(i, j));
+		for (int i = 0; i < cells.length; i++) {
+			for (int j = 0; j < cells.length; j++) {
+				cells[i][j].draw(canvas);
 			}
 		}
 	}
@@ -71,16 +60,14 @@ public class GridView extends View {
 	 * @param b
 	 */
 	public void setFillColor(int i, int j, int a, int r, int g, int b) {
-		grid.setFillColor(i, j, a, r, g, b);
+		setFillColor(i, j, (a << 24) | (r << 16) | (g << 8) | b);
+	}
+
+	public void setFillColor(int i, int j, int color) {
+		cells[i][j].setFillColor(color);
 		// TODO: make sure this works, and test if invalidate() with arguments could be used instead 
 		invalidate();
 	}
-
-//	public void setFillColor(int i, int j, int color) {
-//		grid.setFillColor(i, j, color);
-//		// TODO: make sure this works, and test if invalidate() with arguments could be used instead 
-//		invalidate();
-//	}
 	
 	/**
 	 * Gets the color of the fill of cell at i, j
@@ -89,6 +76,14 @@ public class GridView extends View {
 	 * @return
 	 */
 	public int getFillColor(int i, int j) {
-		return grid.getFillColor(i, j);
+		return cells[i][j].getFillColor();
+	}
+	
+	public void addCellsToActivity(Activity activity) {
+		for (int i = 0; i < cells.length; i++) {
+			for (int j = 0; j < cells.length; j++) {
+				cells[i][j].addSelf(activity);
+			}
+		}
 	}
 }

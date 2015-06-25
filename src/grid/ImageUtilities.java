@@ -61,7 +61,7 @@ public class ImageUtilities {
 	 * sets the squarePaints Paint array with the 9 average colors of the 9 squares of a face
 	 * For Model
 	 */
-	public static void updateAverageGridPaints(CameraGrid grid, int[] RGBData, int margin, int mImageWidth, int mImageHeight) {
+	public static void updateAverageGridPaints(GridView gridView, int[] RGBData, int margin, int mImageWidth, int mImageHeight) {
 		// Bounds of the square, reset every loop of i for the 9 squares
 		double prop = UIValues.GRID_PROPORTION;
 		int leftBound, topBound;
@@ -116,8 +116,7 @@ public class ImageUtilities {
 				greenMean /= pixArea;
 				blueMean /= pixArea;
 
-				grid.setFillColor(m, n, 255, (int) redMean, (int) greenMean, (int) blueMean);
-//				paintGrid[m][n].setARGB((int) 255.0, (int) redMean, (int) greenMean, (int) blueMean);
+				gridView.setFillColor(m, n, 255, (int) redMean, (int) greenMean, (int) blueMean);
 			}
 		}
 	}
