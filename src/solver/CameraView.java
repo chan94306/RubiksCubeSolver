@@ -17,7 +17,7 @@ import android.view.View;
 /**
  * A view that pulls data from the phone camera and displays it on screen
  * This is the main view of SolverActivity
- * Feeds data to a mDrawOnTop (TODO: Rename DrawOnTop to a more descriptive name)
+ * Feeds data to a mCameraGridView 
  * 
  * @author Andy Zhang and that Stanford thing
  */
@@ -157,6 +157,7 @@ public class CameraView extends SurfaceView implements SurfaceHolder.Callback{
 	 * Sets the resolution of the the Camera.Parameters to a resolution not too much greater than 320x240 
 	 * (in terms of pixel count)
 	 * @param parameters parameters of the Camera object to set resolution
+     * TODO: fix this crap up and make it work - Andy
 	 */
 	private void setResolution(Parameters parameters) {
 		// original shitty resolution fixed at 320x240
