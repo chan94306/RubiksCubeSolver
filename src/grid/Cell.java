@@ -8,6 +8,7 @@ import android.graphics.RectF;
  * @author Andy Zhang
  *
  */
+@Deprecated
 public class Cell {
 	// Must be RectF instead of Rect to support Canvas.drawRoundRect()
 	RectF edge;
