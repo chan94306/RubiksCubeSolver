@@ -27,12 +27,12 @@ public class ColorPalette extends View {
 	public ColorPalette(Context context) {
 		super(context);
 		
-		colors[0] = new PaletteButton(context, this, UIValues.red);
-		colors[1] = new PaletteButton(context, this, UIValues.orange);
-		colors[2] = new PaletteButton(context, this, UIValues.yellow);
-		colors[3] = new PaletteButton(context, this, UIValues.green);
-		colors[4] = new PaletteButton(context, this, UIValues.blue);
-		colors[5] = new PaletteButton(context, this, UIValues.white);
+		colors[0] = new PaletteButton(context, this, UIValues.RED);
+		colors[1] = new PaletteButton(context, this, UIValues.ORANGE);
+		colors[2] = new PaletteButton(context, this, UIValues.YELLOW);
+		colors[3] = new PaletteButton(context, this, UIValues.GREEN);
+		colors[4] = new PaletteButton(context, this, UIValues.BLUE);
+		colors[5] = new PaletteButton(context, this, UIValues.WHITE);
 		
 		int topMargin, leftMargin;
 		

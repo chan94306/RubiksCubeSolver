@@ -71,6 +71,8 @@ public class CellView extends View{
 	 * @return 
 	 */
 	public int getFillColor() {
+//		Log.e("", fillButton.getBackground().toString());
+//		Log.e("", "" + ((ColorDrawable) fillButton.getBackground()).getColor());
 		return ((ColorDrawable) fillButton.getBackground()).getColor();
 	}
 	

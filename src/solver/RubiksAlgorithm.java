@@ -206,7 +206,6 @@ public class RubiksAlgorithm extends AsyncTask<String, Integer, Void> {
 			cFace = current.update(mCameraGridView);
 			try {
 				Thread.sleep(REFRESH_RATE);
-
 			} catch (InterruptedException e) {
 				Log.v("Thread.sleep() got try-catched", e.getMessage());
 			}
