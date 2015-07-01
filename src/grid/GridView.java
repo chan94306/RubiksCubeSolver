@@ -9,6 +9,8 @@ import android.view.View;
 /**
  * 3x3 Grid
  * Cells labeled and displayed like this: (Row, Column) 
+ * TODO: Refactor so that the CellViews are actually PART of this view, instead of just initialized 
+ * and manipulated in here.
  * |-----------------|
  * | 0,0 | 0,1 | 0,2 |
  * |-----------------|

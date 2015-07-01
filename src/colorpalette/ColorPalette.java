@@ -11,7 +11,8 @@ import android.widget.ImageView;
 import andy_andrew.rubiks.R;
 
 /**
- * 
+ * TODO: Refactor so that the PaletteButtons are actually PART of this view, instead of just initialized 
+ * and manipulated in here.
  * @author Andy Zhang
  *
  */

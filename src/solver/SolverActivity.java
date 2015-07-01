@@ -172,17 +172,6 @@ public class SolverActivity extends Activity{
 		mColorPalette.addSelf(this);
 		mArrowManager.initializeArrows();
 
-		// Initializes 9 ColorToggleButtons
-		for(int i = 0; i < colorToggles.length; i++){
-			for(int j = 0; j < colorToggles[i].length; j++){
-				colorToggles[i][j] = new ColorToggleButton(this);
-				colorToggles[i][j].setVisibility(Button.INVISIBLE);
-				colorToggles[i][j].setX(UIValues.leftBound + UIValues.squareLength*j);
-				colorToggles[i][j].setY(UIValues.topBound + UIValues.squareLength*i);
-				addContentView(colorToggles[i][j], wrapContent);
-			}
-		}
-		
 		// Defines a Handler object that's attached to the UI thread
 		mHandler = new SolverActivityHandler(this, Looper.getMainLooper(), mArrowManager);
 		mRubiksAlgorithm.setHandler(mHandler);
@@ -204,29 +193,6 @@ public class SolverActivity extends Activity{
 		mColorPalette.setPaletteVisibility(View.INVISIBLE);
 	}
 	
-	
-	/*
-	 * For ColorToggleButtons
-	public void enableColorSelection(int face){
-		for(int i = 0; i < colorToggles.length; i++){
-			for(int j = 0; j < colorToggles[i].length; j++){
-				colorToggles[i][j].setState(current.getSquare(face, i, j));
-				colorToggles[i][j].setText(colorToggles[i][j].getColor());
-				colorToggles[i][j].setVisibility(Button.VISIBLE);
-			}
-		}
-	}
-
-	public void disableColorSelection(int face){
-		for(int i = 0; i < colorToggles.length; i++){
-			for(int j = 0; j < colorToggles[i].length; j++){
-				current.setSquare(face, i, j, colorToggles[i][j].getRawColorInt());				
-				colorToggles[i][j].setVisibility(Button.INVISIBLE);
-			}
-		}
-		current.setColorValue(face, colorToggles[1][1].getRawColorInt());
-	}
-	*/
 	public void displayInstructions(int face){
 		mArrowManager.clearArrows();
 		
