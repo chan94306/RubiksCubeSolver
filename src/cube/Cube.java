@@ -82,6 +82,7 @@ public class Cube implements Cloneable{
 			setColorValue(f, getColorValue(f));
 		}
 		colorMap = new HashMap<Integer, Integer>(c.colorMap);
+		faceMap = new HashMap<Integer, Integer>(c.faceMap);
 	}
 	
 	/**
