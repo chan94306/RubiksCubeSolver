@@ -34,25 +34,25 @@ public class ImageUtilities {
 
 		// if saturation is close to 0 and value is close to 1, then white-ish
 		if (hsv[1] < 0.4 && hsv[2] > 0.6) {
-			return Color.WHITE;
+			return UIValues.WHITE;
 		}
 		// else use hue to determine spectrum color
 		else {
 			if (hsv[0] >= 0 && hsv[0] < 15) {
-				return Color.RED;
+				return UIValues.RED;
 			} else if (hsv[0] >= 15 && hsv[0] < 45) {
-				return 0xFFFF8800; // ORANGE
+				return UIValues.ORANGE;
 			} else if (hsv[0] >= 45 && hsv[0] < 90) {
-				return Color.YELLOW;
+				return UIValues.YELLOW;
 			} else if (hsv[0] >= 90 && hsv[0] < 180) {
-				return Color.GREEN;
+				return UIValues.GREEN;
 			} else if (hsv[0] >= 180 && hsv[0] < 300) {
-				return Color.BLUE;
+				return UIValues.BLUE;
 			} else if (hsv[0] >= 300 && hsv[0] < 360) {
-				return Color.RED;
+				return UIValues.RED;
 			} else {
 				Log.e("ideal color", "BLACK- something went wrong");
-				return Color.BLACK; // something went wrong in this case
+				return UIValues.BLACK; // something went wrong in this case
 			}
 		}
 	}

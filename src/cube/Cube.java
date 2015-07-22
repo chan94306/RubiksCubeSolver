@@ -81,6 +81,7 @@ public class Cube implements Cloneable{
 			}
 			setColorValue(f, getColorValue(f));
 		}
+		colorMap = new HashMap<Integer, Integer>(c.colorMap);
 	}
 	
 	/**
@@ -94,10 +95,14 @@ public class Cube implements Cloneable{
 	 * @param grid GridView object, hopefully with ideal colors for all 9 cells
 	 */
 	public void setFaceColors(int face, GridView grid) {
+		String s = "";
 		for (int i = 0; i < 3; i++) {
 			for (int j = 0; j < 3; j++) {
 				setSquare(face, i, j, grid.getFillColor(i, j));
+				s += grid.getFillColor(i, j) + " ";
 			}
+			Log.e("", s);
+			s = "";
 		}
 		setColorValue(face, grid.getFillColor(1, 1));
 	}
@@ -113,29 +118,41 @@ public class Cube implements Cloneable{
 		for (int face = 0; face < 6; face++) {
 			colorMap.put(getColorValue(face), face);
 		}
+		Log.e("", colorMap.toString());
 
 		for (int face = 0; face < 6; face++) {
 			for (int i = 0; i < 3; i++) {
 				for (int j = 0; j < 3; j++) {
+//					Log.e("1", "" + face + " " + i + " " + j);
+//					Log.e("2", "" + getSquare(face, i, j));
+//					Log.e("3", "" + colorMap.get(getSquare(face, i, j)));
 					setSquare(face, i, j, colorMap.get(getSquare(face, i, j)));
 				}
 			}
 		}
 	}
 	
-	// TODO: To be completed/Does this really belong in Cube?
-	public int[][] update(CameraGridView cgv) {
-		int[][] newFace = new int[3][3];
-		for (int i = 0; i < 3; i++) {
-			for (int j = 0; j < 3; j++) {
-				newFace[i][j] = colorMap.get(ImageUtilities.getIdealColor(cgv.getFillColor(i, j)));
-			}
-		}
-		// return a 2D array of the face 1 (the face pointed at camera) based on
+	/*
+	 	// return a 2D array of the face 1 (the face pointed at camera) based on
 		// what's currently on the cube
 		// the 2D array will consist of all numbers 0-6, not the RGB value
 		// use getColorValue and cleverness to convert from approximate RGB
 		// value to face int value
+	 */
+	// TODO: Does this really belong in Cube?
+	public int[][] update(CameraGridView cgv) {
+		int[][] newFace = new int[3][3];
+		for (int i = 0; i < 3; i++) {
+			for (int j = 0; j < 3; j++) {
+//				Log.e("" + i + " " + j, colorMap.toString());
+//				Log.e("" + i + " " + j, "" + cgv.getFillColor(i, j));
+//				Log.e("" + i + " " + j, "" + ImageUtilities.getIdealColor(cgv.getFillColor(i, j)));
+//				Log.e("" + i + " " + j, "" + colorMap.get(ImageUtilities.getIdealColor(cgv.getFillColor(i, j))));
+
+				newFace[i][j] = colorMap.get(ImageUtilities.getIdealColor(cgv.getFillColor(i, j)));
+			}
+		}
+
 		return newFace;
 	}
 	

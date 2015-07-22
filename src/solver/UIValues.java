@@ -8,12 +8,15 @@ public class UIValues {
 	public static int displayWidth, displayHeight;
 	public static int topBound, leftBound, squareLength;
 	
-	public static int red = Color.RED;
-	public static int orange = 0xFFFF9933;
-	public static int yellow = Color.YELLOW;
-	public static int green = 0xFF00CC00;
-	public static int blue = Color.BLUE;
-	public static int white = Color.WHITE;
+	public static int RED = Color.RED;
+	public static int ORANGE = 0xFFFF9933;
+	public static int YELLOW = Color.YELLOW;
+	public static int GREEN = 0xFF00CC00;
+	public static int BLUE = Color.BLUE;
+	public static int WHITE = Color.WHITE;
+	
+	// For error
+	public static int BLACK = Color.BLACK;
 
 	public static void init() {
 		if(displayWidth < displayHeight){
