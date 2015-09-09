@@ -21,7 +21,6 @@ public class CameraGridView extends GridView implements CameraImageProcessor{
 	
 	public CameraGridView(Activity activity, final ColorPalette colorPalette) {
 		super(activity);
-//		super(context, UIValues.leftBound, UIValues.topBound, UIValues.squareLength, 10, 15, UIValues.squareLength/8, Color.BLACK);
 		cells = new CameraCellView[3][3];
 		for (int i = 0; i < cells.length; i++) {
 			for (int j = 0; j < cells[i].length; j++) {
