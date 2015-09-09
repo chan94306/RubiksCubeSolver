@@ -18,6 +18,7 @@ import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,8 +39,9 @@ public class SolverActivity extends Activity{
 
 	private final ColorToggleButton[][] colorToggles = new ColorToggleButton[3][3];
 	private ColorPalette mColorPalette;
-	private TextView dialog;
-	private Button captureButton, skipButton;
+//	private TextView dialog;
+	private CaptureButton captureButton;
+	private Button skipButton;
 	private Handler mHandler;
 
 	private int face = 0;
@@ -62,7 +64,7 @@ public class SolverActivity extends Activity{
 	            | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
 	            | View.SYSTEM_UI_FLAG_FULLSCREEN // hide status bar
 	            | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
-//		
+		
 		// Get some information about the display
 		Display display = getWindowManager().getDefaultDisplay();
 		Point size = new Point();
@@ -73,14 +75,14 @@ public class SolverActivity extends Activity{
 		UIValues.init();
 		
 		// Initializes the general-purposes dialog box
-		dialog = new TextView(this);
-		dialog.setTextColor(Color.BLACK);
-		dialog.setText("Follow rotation instructions. Tap 'Capture' to capture colors");
-		dialog.setBackgroundColor(Color.WHITE);
-		dialog.setAlpha((float) 0.7);
-		dialog.setX(50);
-		dialog.setY(50);
-		dialog.setTextSize(UIValues.displayHeight/40);
+//		dialog = new TextView(this);
+//		dialog.setTextColor(Color.BLACK);
+//		dialog.setText("Align the Rubik's cube to the grid, then take a shot!");
+//		dialog.setBackgroundColor(Color.WHITE);
+//		dialog.setAlpha((float) 0.7);
+//		dialog.setX(50);
+//		dialog.setY(50);
+//		dialog.setTextSize(UIValues.displayHeight/40);
 
 		// Create our DrawOnTop view.
 		// Create our Preview view and set it as the content of our activity.
@@ -104,17 +106,18 @@ public class SolverActivity extends Activity{
 		});
 
 		// Initializes the capture button
-		captureButton = new CaptureButton(this, size.x - 200, 50);
+		captureButton = new CaptureButton(this, size.x-200, size.y/2-75);		
 		captureButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				if(captureButton.getText().equals("Capture")){
+				if(captureButton.getState() == CaptureButton.States.Capture){
 					mCameraView.disableData();
 					mCameraGridView.disableUpdatePaints();
 					mCameraGridView.updateToIdealColors();
 //					mCameraGridView.readFace(face, current);
 					
 					enableColorPalette(face);
-					captureButton.setText("Confirm");
+					captureButton.toggleState();
+//					captureButton.setText("Confirm");
 				}else{ // User taps "Confirm"
 					// 
 					current.setFaceColors(face, mCameraGridView);
@@ -142,15 +145,15 @@ public class SolverActivity extends Activity{
 						 */
 						captureButton.setVisibility(Button.INVISIBLE);
 						skipButton.setVisibility(Button.VISIBLE);
-						dialog.setText("");
-						dialog.setVisibility(View.INVISIBLE);
+//						dialog.setText("");
+//						dialog.setVisibility(View.INVISIBLE);
 
 						mRubiksAlgorithm.execute();
 					}
 					displayInstructions(face);
 					face++;
-					captureButton.setText("Capture");
-
+					captureButton.toggleState();
+//					captureButton.setText("Capture");
 				}
 			}
 
@@ -162,7 +165,7 @@ public class SolverActivity extends Activity{
 		
 		addContentView(captureButton, wrapContent);
 		addContentView(skipButton, wrapContent);
-		addContentView(dialog, wrapContent);
+//		addContentView(dialog, wrapContent);
 		addContentView(mColorPalette, wrapContent);
 		
 		addContentView(mCameraGridView, wrapContent);

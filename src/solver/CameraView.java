@@ -1,18 +1,14 @@
 package solver;
 
-import grid.CameraGridView;
-
 import java.io.IOException;
 import java.util.List;
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.hardware.Camera;
 import android.hardware.Camera.Parameters;
 import android.hardware.Camera.PreviewCallback;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.view.View;
 
 /**
  * A view that pulls data from the phone camera and displays it on screen
@@ -38,13 +34,6 @@ public class CameraView extends SurfaceView implements SurfaceHolder.Callback{
 		SurfaceHolder mHolder = getHolder();
 		mHolder.addCallback(this);
 		//	mHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
-
-		setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) {
-				//	        	mDrawOnTop.notifyClick();
-				//	        	Log.e("log", "hi");
-			}
-		});
 	}
 
 	@Override
@@ -77,14 +66,14 @@ public class CameraView extends SurfaceView implements SurfaceHolder.Callback{
 				public void onPreviewFrame(byte[] data, Camera camera) {
 					if ((mCameraImageProcessor == null) || mFinished )
 						return;
-					
+
 					// If this is the first callback, we need to initialize everything 
 					if (mCameraImageProcessor.getImageYUV() == null) {
 						Camera.Parameters params = camera.getParameters();
 						mCameraImageProcessor.initImageDimensions(params.getPreviewSize().width, params.getPreviewSize().height);
 						mCameraImageProcessor.initImageYUV(data.length);
 					}
-					
+
 					// If we need to pass new data (this is false after Capture button tapped and user selecting colors)
 					if (passData) {
 						System.arraycopy(data, 0, mCameraImageProcessor.getImageYUV(), 0, data.length);
@@ -132,20 +121,21 @@ public class CameraView extends SurfaceView implements SurfaceHolder.Callback{
 		setResolution(parameters);
 
 		//		parameters.setPreviewSize(320, 240);
-		//	parameters.setPreviewFrameRate(15);
+		//		parameters.setRotation(180);
+		//		parameters.setPreviewFrameRate(15);
 		//		parameters.setSceneMode(Camera.Parameters.SCENE_MODE_NIGHT);
 		parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
 		mCamera.setParameters(parameters);
 		mCamera.startPreview();
 	}
-	
+
 	/**
 	 * Allow image data to be sent to CameraGridView
 	 */
 	public void enableData() {
 		passData = true;
 	}
-	
+
 	/**
 	 * Stop image data from being sent to CameraGridView
 	 */
@@ -157,7 +147,7 @@ public class CameraView extends SurfaceView implements SurfaceHolder.Callback{
 	 * Sets the resolution of the the Camera.Parameters to a resolution not too much greater than 320x240 
 	 * (in terms of pixel count)
 	 * @param parameters parameters of the Camera object to set resolution
-     * TODO: fix this crap up and make it work - Andy
+	 * TODO: fix this crap up and make it work - Andy
 	 */
 	private void setResolution(Parameters parameters) {
 		// original shitty resolution fixed at 320x240
