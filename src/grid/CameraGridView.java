@@ -1,6 +1,7 @@
 package grid;
 
 import colorpalette.ColorPalette;
+import solver.CameraImageProcessor;
 import solver.UIValues;
 import android.app.Activity;
 import android.content.Context;
@@ -8,7 +9,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.util.Log;
 
-public class CameraGridView extends GridView {	
+public class CameraGridView extends GridView implements CameraImageProcessor{	
 	// Height and width of the image provided by the camera, from CameraView
 	private int imageWidth, imageHeight;
 	// The entire image provided by the camera, in an integer array of RBG values

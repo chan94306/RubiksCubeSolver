@@ -152,7 +152,6 @@ public class SolverActivity extends Activity{
 					captureButton.setText("Capture");
 
 				}
-				//				Log.e("button", "pressed");
 			}
 
 		});
@@ -161,15 +160,14 @@ public class SolverActivity extends Activity{
 		
 		LayoutParams wrapContent = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 		
-//		addContentView(mDrawOnTop, wrapContent);
 		addContentView(captureButton, wrapContent);
 		addContentView(skipButton, wrapContent);
 		addContentView(dialog, wrapContent);
-//		addContentView(mColorPalette, wrapContent);
+		addContentView(mColorPalette, wrapContent);
+		
 		addContentView(mCameraGridView, wrapContent);
 		
 		mCameraGridView.addCellsToActivity(this);
-		mColorPalette.addSelf(this);
 		mArrowManager.initializeArrows();
 
 		// Defines a Handler object that's attached to the UI thread

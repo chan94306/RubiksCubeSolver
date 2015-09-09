@@ -5,7 +5,10 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageView;
 import andy_andrew.rubiks.R;
@@ -16,26 +19,18 @@ import andy_andrew.rubiks.R;
  * @author Andy Zhang
  *
  */
-public class ColorPalette extends View {
+public class ColorPalette extends ViewGroup {
+	public static final int NO_COLOR = 0;	// This is "clear" (alpha is 0). Cannot use -1 because that is Color.WHITE (0xffffffff)
 	
 	private PaletteButton[] colors = new PaletteButton[6];
-	private int selectedColor = 0;	// This is "clear" (alpha is 0). Cannot use -1 because that is Color.WHITE (0xffffffff)
+	private int selectedColor = NO_COLOR;
 	private ImageView selector;
 	
-	private int squareLength;
+	private int squareLength, topMargin, leftMargin;
 
 	public ColorPalette(Context context) {
 		super(context);
-		
-		colors[0] = new PaletteButton(context, this, UIValues.RED);
-		colors[1] = new PaletteButton(context, this, UIValues.ORANGE);
-		colors[2] = new PaletteButton(context, this, UIValues.YELLOW);
-		colors[3] = new PaletteButton(context, this, UIValues.GREEN);
-		colors[4] = new PaletteButton(context, this, UIValues.BLUE);
-		colors[5] = new PaletteButton(context, this, UIValues.WHITE);
-		
-		int topMargin, leftMargin;
-		
+				
 		if(UIValues.displayHeight < UIValues.displayWidth){ //landscape orientation
 			topMargin = UIValues.displayHeight/7;
 			squareLength = (int)(1.0/6*(UIValues.displayHeight - 2*topMargin));
@@ -45,33 +40,31 @@ public class ColorPalette extends View {
 			squareLength = (int)(1.0/6*(UIValues.displayWidth - 2*leftMargin));
 			topMargin = (int)(0.5*UIValues.topBound-0.5*squareLength);
 		}
-				
+		setX(leftMargin);
+		setY(topMargin);
+		
+		colors[0] = new PaletteButton(context, this, UIValues.RED);
+		colors[1] = new PaletteButton(context, this, UIValues.ORANGE);
+		colors[2] = new PaletteButton(context, this, UIValues.YELLOW);
+		colors[3] = new PaletteButton(context, this, UIValues.GREEN);
+		colors[4] = new PaletteButton(context, this, UIValues.BLUE);
+		colors[5] = new PaletteButton(context, this, UIValues.WHITE);
+		
 		for(int i = 0; i < colors.length; i++){
-			colors[i].setX(leftMargin);
-			colors[i].setY(topMargin+squareLength*i);
-			colors[i].setWidth(squareLength);
-			colors[i].setHeight(squareLength);
 			colors[i].setBackgroundColor(colors[i].getColor());
+			colors[i].setVisibility(View.INVISIBLE);
+			addView(colors[i]);
 		}
-				
+		
 		selector = new ImageView(context);
 		selector.setImageResource(R.drawable.selector);
-		selector.setVisibility(ImageView.VISIBLE);
+		selector.setVisibility(View.INVISIBLE);
+		addView(selector, squareLength, squareLength);
 	}
 	
 	@Override
 	protected void onDraw(Canvas canvas) {
 		// TODO: draw what is necessary. selector? 
-	}
-
-	public void addSelf(SolverActivity mSolverActivity) {
-		LayoutParams lp = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-		for(int i = 0; i < colors.length; i++){
-			mSolverActivity.addContentView(colors[i], lp);
-		}
-		
-		lp = new LayoutParams(squareLength, squareLength);
-		mSolverActivity.addContentView(selector, lp);
 	}
 	
 	public void setPaletteVisibility(int visibility) {
@@ -83,11 +76,19 @@ public class ColorPalette extends View {
 
 	public void notifyColorSelection(int color, float x, float y) {
 		selectedColor = color;
-		selector.setX(x);
-		selector.setY(y);
+		selector.layout((int)x, (int)y, (int) (x + squareLength), (int)(y + squareLength));
 	}
 	
 	public int getSelectedColor() {
 		return selectedColor;
+	}
+
+	@Override
+	protected void onLayout(boolean changed, int l, int t, int r, int b) {
+		Log.e("", "" + l + " " + t + " " + r + " " + b);
+		for (int i = 0; i < colors.length; i++) {
+			colors[i].layout(0, squareLength*i, squareLength, squareLength*(i+1));
+		}
+		selector.layout(0, 0, 0, 0);
 	}
 }

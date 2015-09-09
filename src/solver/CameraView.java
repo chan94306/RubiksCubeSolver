@@ -17,19 +17,19 @@ import android.view.View;
 /**
  * A view that pulls data from the phone camera and displays it on screen
  * This is the main view of SolverActivity
- * Feeds data to a mCameraGridView 
+ * Feeds data to a mCameraImageProcessor 
  * 
  * @author Andy Zhang and that Stanford thing
  */
 public class CameraView extends SurfaceView implements SurfaceHolder.Callback{
 	private Camera mCamera;
-	private CameraGridView mCameraGridView;
+	private CameraImageProcessor mCameraImageProcessor;
 	private boolean mFinished;
 	private boolean passData;
 
-	public CameraView(Context context, CameraGridView cgv) {
+	public CameraView(Context context, CameraImageProcessor cip) {
 		super(context);
-		mCameraGridView = cgv;
+		mCameraImageProcessor = cip;
 		mFinished = false;
 		passData = true;
 
@@ -75,21 +75,21 @@ public class CameraView extends SurfaceView implements SurfaceHolder.Callback{
 			// Preview callback used whenever new viewfinder frame is available
 			mCamera.setPreviewCallback(new PreviewCallback() {
 				public void onPreviewFrame(byte[] data, Camera camera) {
-					if ((mCameraGridView == null) || mFinished )
+					if ((mCameraImageProcessor == null) || mFinished )
 						return;
 					
 					// If this is the first callback, we need to initialize everything 
-					if (mCameraGridView.getImageYUV() == null) {
+					if (mCameraImageProcessor.getImageYUV() == null) {
 						Camera.Parameters params = camera.getParameters();
-						mCameraGridView.initImageDimensions(params.getPreviewSize().width, params.getPreviewSize().height);
-						mCameraGridView.initImageYUV(data.length);
+						mCameraImageProcessor.initImageDimensions(params.getPreviewSize().width, params.getPreviewSize().height);
+						mCameraImageProcessor.initImageYUV(data.length);
 					}
 					
 					// If we need to pass new data (this is false after Capture button tapped and user selecting colors)
 					if (passData) {
-						System.arraycopy(data, 0, mCameraGridView.getImageYUV(), 0, data.length);
+						System.arraycopy(data, 0, mCameraImageProcessor.getImageYUV(), 0, data.length);
 						// forces grid to redraw
-						mCameraGridView.invalidate();
+						mCameraImageProcessor.invalidate();
 					}
 
 					// Pass YUV data to draw-on-top companion
