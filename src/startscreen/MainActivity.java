@@ -1,6 +1,7 @@
 package startscreen;
 
 import solver.SolverActivity;
+import android.net.Uri;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
@@ -32,12 +33,12 @@ public class MainActivity extends Activity {
 	 * @param view
 	 */
 	public void contactClick(View view){
-//		String uriText = "mailto:" + Uri.encode("cbell@pausd.org") + 
-//				"?subject=" + Uri.encode("JetBoi") + 
-//				"&body=" + Uri.encode("Sample Question: Who discovered the Galilean moons?");
-//		Intent mail = new Intent(Intent.ACTION_SENDTO, Uri.parse(uriText));
-//
-//		startActivity(Intent.createChooser(mail, "Send mail..."));
+		String uriText = "mailto:" + Uri.encode("y.zhang@berkeley.edu") + 
+				"?subject=" + Uri.encode("Rubik's Cube Solver App") + 
+				"&body=" + Uri.encode("We'd love to hear your feedback!");
+		Intent mail = new Intent(Intent.ACTION_SENDTO, Uri.parse(uriText));
+
+		startActivity(Intent.createChooser(mail, "Select Mail Client..."));
 	}
 
 

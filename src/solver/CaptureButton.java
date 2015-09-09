@@ -27,7 +27,7 @@ public class CaptureButton extends ImageButton{
 	public CaptureButton(Context context, int x, int y) {
 		super(context);
 		setImageResource(R.drawable.camera_icon);
-//		setBackgroundColor(Color.TRANSPARENT);
+		setBackgroundColor(Color.WHITE);
 //		setBackground(null);
 //		setBackgroundResource(R.drawable.camera);
 		setX(x);
@@ -37,21 +37,5 @@ public class CaptureButton extends ImageButton{
 		setMaxHeight(150);
 
 		// Ideally, the OnClickListener is in here too, but it references too many variables
-	}
-	
-	public CaptureButton.States getState() {
-		return state;
-	}
-	
-	public void toggleState() {
-		if (state == States.Capture) {
-			state = States.Continue;
-			setImageResource(R.drawable.camera_icon);
-		} else {
-			state = States.Capture;
-			setImageResource(R.drawable.continue_icon);
-		}
-//		invalidate();
-//		forceLayout();
 	}
 }

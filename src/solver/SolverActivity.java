@@ -31,7 +31,7 @@ import android.widget.Toast;
  *
  */
 public class SolverActivity extends Activity{    
-	
+
 	private CameraView mCameraView;
 	private CameraGridView mCameraGridView;
 	private RubiksAlgorithm mRubiksAlgorithm;
@@ -39,8 +39,10 @@ public class SolverActivity extends Activity{
 
 	private final ColorToggleButton[][] colorToggles = new ColorToggleButton[3][3];
 	private ColorPalette mColorPalette;
-//	private TextView dialog;
+	//	private TextView dialog;
 	private CaptureButton captureButton;
+	private ContinueButton continueButton;
+
 	private Button skipButton;
 	private Handler mHandler;
 
@@ -51,20 +53,20 @@ public class SolverActivity extends Activity{
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
 		// Hide the window title.
-//		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+		//		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		//		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		
+
 		View mDecorView = getWindow().getDecorView();
 		mDecorView.setSystemUiVisibility(
-	            View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-	            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-	            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-	            | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
-	            | View.SYSTEM_UI_FLAG_FULLSCREEN // hide status bar
-	            | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
-		
+				View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+				| View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+				| View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+				| View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
+				| View.SYSTEM_UI_FLAG_FULLSCREEN // hide status bar
+				| View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+
 		// Get some information about the display
 		Display display = getWindowManager().getDefaultDisplay();
 		Point size = new Point();
@@ -73,20 +75,20 @@ public class SolverActivity extends Activity{
 		UIValues.displayHeight = size.y;
 		UIValues.GRID_PROPORTION = 0.7;
 		UIValues.init();
-		
+
 		// Initializes the general-purposes dialog box
-//		dialog = new TextView(this);
-//		dialog.setTextColor(Color.BLACK);
-//		dialog.setText("Align the Rubik's cube to the grid, then take a shot!");
-//		dialog.setBackgroundColor(Color.WHITE);
-//		dialog.setAlpha((float) 0.7);
-//		dialog.setX(50);
-//		dialog.setY(50);
-//		dialog.setTextSize(UIValues.displayHeight/40);
+		//		dialog = new TextView(this);
+		//		dialog.setTextColor(Color.BLACK);
+		//		dialog.setText("Align the Rubik's cube to the grid, then take a shot!");
+		//		dialog.setBackgroundColor(Color.WHITE);
+		//		dialog.setAlpha((float) 0.7);
+		//		dialog.setX(50);
+		//		dialog.setY(50);
+		//		dialog.setTextSize(UIValues.displayHeight/40);
 
 		// Create our DrawOnTop view.
 		// Create our Preview view and set it as the content of our activity.
-//		mDrawOnTop = new DrawOnTop(this);
+		//		mDrawOnTop = new DrawOnTop(this);
 		mColorPalette = new ColorPalette(this);
 		mCameraGridView = new CameraGridView(this, mColorPalette);
 		mCameraView = new CameraView(this, mCameraGridView);
@@ -105,33 +107,37 @@ public class SolverActivity extends Activity{
 			}
 		});
 
-		// Initializes the capture button
 		captureButton = new CaptureButton(this, size.x-200, size.y/2-75);		
 		captureButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				if(captureButton.getState() == CaptureButton.States.Capture){
-					mCameraView.disableData();
-					mCameraGridView.disableUpdatePaints();
-					mCameraGridView.updateToIdealColors();
-//					mCameraGridView.readFace(face, current);
-					
-					enableColorPalette(face);
-					captureButton.toggleState();
-//					captureButton.setText("Confirm");
-				}else{ // User taps "Confirm"
-					// 
-					current.setFaceColors(face, mCameraGridView);
-					disableColorPalette(face);
-					mCameraView.enableData();
-					mCameraGridView.enableUpdatePaints();
+				mCameraView.disableData();
+				mCameraGridView.disableUpdatePaints();
+				mCameraGridView.updateToIdealColors();
+				//					mCameraGridView.readFace(face, current);
 
-					if(face == 5){
-						//						mDrawOnTop.debugCubeColors();
-						
-//						current.reMap();	// Incorrectly replaces the next line. See DrawOnTop.recompileCubeColors and Cube.reMap
-						current.convertColorsToInts();
-						
-						/*
+				enableColorPalette(face);
+				//					captureButton.setText("Confirm");
+				continueButton.setVisibility(View.VISIBLE);
+				captureButton.setVisibility(View.INVISIBLE);
+			}
+
+		});
+
+		continueButton = new ContinueButton(this, size.x-200, size.y/2-75);		
+		continueButton.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				current.setFaceColors(face, mCameraGridView);
+				disableColorPalette(face);
+				mCameraView.enableData();
+				mCameraGridView.enableUpdatePaints();
+
+				if(face == 5){
+					//						mDrawOnTop.debugCubeColors();
+
+					//						current.reMap();	// Incorrectly replaces the next line. See DrawOnTop.recompileCubeColors and Cube.reMap
+					current.convertColorsToInts();
+
+					/*
 						 //TODO: Re-enable this error check for user! Double check to make sure everything is reset
 						 if(!current.isValidCube()){
 						 	mDrawOnTop.setPhase(0);
@@ -142,34 +148,38 @@ public class SolverActivity extends Activity{
 						 	return;
 						 }
 //						mDrawOnTop.debugCubeInts();
-						 */
-						captureButton.setVisibility(Button.INVISIBLE);
-						skipButton.setVisibility(Button.VISIBLE);
-//						dialog.setText("");
-//						dialog.setVisibility(View.INVISIBLE);
+					 */
+					captureButton.setVisibility(Button.INVISIBLE);
+					skipButton.setVisibility(Button.VISIBLE);
+					//						dialog.setText("");
+					//						dialog.setVisibility(View.INVISIBLE);
 
-						mRubiksAlgorithm.execute();
-					}
-					displayInstructions(face);
-					face++;
-					captureButton.toggleState();
-//					captureButton.setText("Capture");
+					mRubiksAlgorithm.execute();
+				} else {
+					captureButton.setVisibility(View.VISIBLE);
 				}
+				continueButton.setVisibility(View.INVISIBLE);
+				
+				displayInstructions(face);
+				face++;
 			}
 
 		});
 
 		setContentView(mCameraView);
-		
+
 		LayoutParams wrapContent = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-		
+
 		addContentView(captureButton, wrapContent);
+		addContentView(continueButton, wrapContent);
+		continueButton.setVisibility(View.INVISIBLE);
+
 		addContentView(skipButton, wrapContent);
-//		addContentView(dialog, wrapContent);
+		//		addContentView(dialog, wrapContent);
 		addContentView(mColorPalette, wrapContent);
-		
+
 		addContentView(mCameraGridView, wrapContent);
-		
+
 		mCameraGridView.addCellsToActivity(this);
 		mArrowManager.initializeArrows();
 
@@ -177,7 +187,7 @@ public class SolverActivity extends Activity{
 		mHandler = new SolverActivityHandler(this, Looper.getMainLooper(), mArrowManager);
 		mRubiksAlgorithm.setHandler(mHandler);
 	}
-	
+
 	/**
 	 * Makes the Color Palette visible, allowing users to modify the colors of the CameraGridView
 	 * @param face TODO: remove this argument if unnecessary
@@ -193,10 +203,10 @@ public class SolverActivity extends Activity{
 	public void disableColorPalette(int face){
 		mColorPalette.setPaletteVisibility(View.INVISIBLE);
 	}
-	
+
 	public void displayInstructions(int face){
 		mArrowManager.clearArrows();
-		
+
 		String s;
 		if(face < 3){
 			s = "Rotate whole cube LEFT";

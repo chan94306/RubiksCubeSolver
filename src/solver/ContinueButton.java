@@ -12,7 +12,7 @@ import andy_andrew.rubiks.R;
  * CaptureButton class so that perhaps one day, the bulk of its code won't be in the SolverActivity
  * @author Andy Zhang
  */
-public class CaptureButton extends ImageButton{
+public class ContinueButton extends ImageButton{
 	public enum States {Capture, Continue};
 	private States state = States.Capture;
 	private int face = 0;
@@ -24,9 +24,11 @@ public class CaptureButton extends ImageButton{
 	 * @param y y-coordinate of the Button on screen
 	 */
 	@SuppressLint("NewApi")
-	public CaptureButton(Context context, int x, int y) {
+	public ContinueButton(Context context, int x, int y) {
 		super(context);
-		setImageResource(R.drawable.camera_icon);
+		setImageResource(R.drawable.continue_icon);
+		setBackgroundColor(Color.WHITE);
+
 //		setBackgroundColor(Color.TRANSPARENT);
 //		setBackground(null);
 //		setBackgroundResource(R.drawable.camera);
@@ -35,23 +37,5 @@ public class CaptureButton extends ImageButton{
 		setAdjustViewBounds(true);
 		setMaxWidth(150);
 		setMaxHeight(150);
-
-		// Ideally, the OnClickListener is in here too, but it references too many variables
-	}
-	
-	public CaptureButton.States getState() {
-		return state;
-	}
-	
-	public void toggleState() {
-		if (state == States.Capture) {
-			state = States.Continue;
-			setImageResource(R.drawable.camera_icon);
-		} else {
-			state = States.Capture;
-			setImageResource(R.drawable.continue_icon);
-		}
-//		invalidate();
-//		forceLayout();
 	}
 }
