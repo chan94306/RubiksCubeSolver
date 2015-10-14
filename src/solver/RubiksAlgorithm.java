@@ -2,6 +2,7 @@ package solver;
 
 import grid.CameraGridView;
 import cube.Cube;
+import cube.CubeUtilities;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -299,51 +300,62 @@ public class RubiksAlgorithm extends AsyncTask<String, Integer, Void> {
 
 	public  void firstLayerCorners(){
 		future = new Cube(current);
-		while(current.numFirstLayerCornersCorrect() < 3){
-			if(!current.isLeftBottomCornerCorrect() && current.isCornersOnTopLayer()){
+		while(CubeUtilities.numFirstLayerCornersCorrect(current) < 3){
+			if(!CubeUtilities.isLeftBottomCornerCorrect(current) &&
+                CubeUtilities.isCornersOnTopLayer(current)){
 				notifyMainThreadToast("corners on top layer");
 				int colorA = current.getSquare(0,1,1);
 				int colorB = current.getSquare(1,1,1);
-				if(current.getSquare(2,0,0) == 4 && current.areComplementaryCornerColors(2,0,0,colorA,colorB)) firstLayerCornersHelper(CCW);
-				else if(current.getSquare(3,0,0) == 4 && current.areComplementaryCornerColors(3,0,0,colorA,colorB)){
+				if(current.getSquare(2,0,0) == 4 &&
+                    CubeUtilities.areComplementaryCornerColors(current, 2,0,0,colorA,colorB)) firstLayerCornersHelper(CCW);
+				else if(current.getSquare(3,0,0) == 4 &&
+                    CubeUtilities.areComplementaryCornerColors(current, 3,0,0,colorA,colorB)){
 					solveStep(5, CW);
 					firstLayerCornersHelper(CCW);
 				}
-				else if(current.getSquare(1,0,0) == 4 && current.areComplementaryCornerColors(1,0,0,colorA,colorB)){
+				else if(current.getSquare(1,0,0) == 4 &&
+                    CubeUtilities.areComplementaryCornerColors(current, 1,0,0,colorA,colorB)){
 					solveStep(5, CCW);
 					firstLayerCornersHelper(CCW);
 				}
-				else if(current.getSquare(0,0,0) == 4 && current.areComplementaryCornerColors(0,0,0,colorA,colorB)){
+				else if(current.getSquare(0,0,0) == 4 &&
+                    CubeUtilities.areComplementaryCornerColors(current, 0,0,0,colorA,colorB)){
 					solveStep(5, CW);
 					solveStep(5, CW);
 					firstLayerCornersHelper(CCW);
 				}
 
-				else if(current.getSquare(0,0,2) == 4 && current.areComplementaryCornerColors(0,0,2,colorA,colorB)){
+				else if(current.getSquare(0,0,2) == 4 &&
+                    CubeUtilities.areComplementaryCornerColors(current, 0,0,2,colorA,colorB)){
 					solveStep(5, CW);
 					firstLayerCornersHelper(CW);
 				}
-				else if(current.getSquare(1,0,2) == 4 && current.areComplementaryCornerColors(1,0,2,colorA,colorB)){
+				else if(current.getSquare(1,0,2) == 4 &&
+                    CubeUtilities.areComplementaryCornerColors(current, 1,0,2,colorA,colorB)){
 					solveStep(5, CW);
 					solveStep(5, CW);
 					firstLayerCornersHelper(CW);
 				}
-				else if(current.getSquare(2,0,2) == 4 && current.areComplementaryCornerColors(2,0,2,colorA,colorB)){
+				else if(current.getSquare(2,0,2) == 4 &&
+                    CubeUtilities.areComplementaryCornerColors(current, 2,0,2,colorA,colorB)){
 					solveStep(5, CCW);
 					firstLayerCornersHelper(CW);
 				}
-				else if(current.getSquare(3,0,2) == 4 && current.areComplementaryCornerColors(3,0,2,colorA,colorB)){
+				else if(current.getSquare(3,0,2) == 4 &&
+                    CubeUtilities.areComplementaryCornerColors(current, 3,0,2,colorA,colorB)){
 					firstLayerCornersHelper(CW);
 				}
 
-				else if (current.getSquare(5,2,0) == 4 && current.areComplementaryCornerColors(5,2,0,colorA,colorB)){
+				else if (current.getSquare(5,2,0) == 4 &&
+                    CubeUtilities.areComplementaryCornerColors(current, 5,2,0,colorA,colorB)){
 					solveStep(0, CCW);
 					solveStep(5, CW);
 					solveStep(0, CW);
 					solveStep(5, CCW);
 					firstLayerCornersHelper(CW);
 				}      
-				else if (current.getSquare(5,0,0) == 4 && current.areComplementaryCornerColors(5,0,0,colorA,colorB)){
+				else if (current.getSquare(5,0,0) == 4 &&
+                    CubeUtilities.areComplementaryCornerColors(current, 5,0,0,colorA,colorB)){
 					solveStep(5, CCW);
 					solveStep(0, CCW);
 					solveStep(5, CW);
@@ -351,7 +363,8 @@ public class RubiksAlgorithm extends AsyncTask<String, Integer, Void> {
 					solveStep(5, CCW);
 					firstLayerCornersHelper(CW);
 				}
-				else if (current.getSquare(5,2,2) == 4 && current.areComplementaryCornerColors(5,2,2,colorA,colorB)){
+				else if (current.getSquare(5,2,2) == 4 &&
+                    CubeUtilities.areComplementaryCornerColors(current, 5,2,2,colorA,colorB)){
 					solveStep(5, CW);
 					solveStep(0, CCW);
 					solveStep(5, CW);
@@ -359,7 +372,8 @@ public class RubiksAlgorithm extends AsyncTask<String, Integer, Void> {
 					solveStep(5, CCW);
 					firstLayerCornersHelper(CW);
 				}
-				else if (current.getSquare(5,0,2) == 4 && current.areComplementaryCornerColors(5,0,2,colorA,colorB)){
+				else if (current.getSquare(5,0,2) == 4 &&
+                    CubeUtilities.areComplementaryCornerColors(current, 5,0,2,colorA,colorB)){
 					solveStep(5, CW);
 					solveStep(5, CW);
 					solveStep(0, CCW);
@@ -372,19 +386,23 @@ public class RubiksAlgorithm extends AsyncTask<String, Integer, Void> {
 			}
 			solveStep(CW);
 
-			if(!current.isCornersOnTopLayer() && !current.isLeftBottomCornerCorrect() && current.numFirstLayerCornersCorrect() < 3){
+			if(!CubeUtilities.isCornersOnTopLayer(current) &&
+                !CubeUtilities.isLeftBottomCornerCorrect(current) &&
+                CubeUtilities.numFirstLayerCornersCorrect(current) < 3){
 				notifyMainThreadToast("corners not on top layer");
 				int colorA = current.getSquare(0,1,1);
 				int colorB = current.getSquare(1,1,1);
 				//if the corner piece is in first layer but not in the right position
-				if (current.getSquare(0,2,2) == 4 && current.areComplementaryCornerColors(0,2,2,colorA,colorB)){
+				if (current.getSquare(0,2,2) == 4 &&
+                    CubeUtilities.areComplementaryCornerColors(current, 0,2,2,colorA,colorB)){
 					solveStep(1, CW);
 					solveStep(5, CCW);
 					solveStep(1, CCW);
 					solveStep(5, CW);
 					firstLayerCornersHelper(CW);
 				}
-				else if (current.getSquare(1,2,0) == 4 && current.areComplementaryCornerColors(1,2,0,colorA,colorB)){
+				else if (current.getSquare(1,2,0) == 4 &&
+                    CubeUtilities.areComplementaryCornerColors(current, 1,2,0,colorA,colorB)){
 					solveStep(0, CCW);
 					solveStep(5, CW);
 					solveStep(0, CW);
@@ -406,8 +424,8 @@ public class RubiksAlgorithm extends AsyncTask<String, Integer, Void> {
 			}
 		}
 		notifyMainThreadToast("positioning sacrifice corner");
-		if(current.numFirstLayerCornersCorrect() == 3)
-		while(current.isLeftBottomCornerCorrect()){
+		if(CubeUtilities.numFirstLayerCornersCorrect(current) == 3)
+		while(CubeUtilities.isLeftBottomCornerCorrect(current)){
 			solveStep(CW);
 		}
 	}
@@ -420,8 +438,8 @@ public class RubiksAlgorithm extends AsyncTask<String, Integer, Void> {
 	 */
 	public void firstLayerCross(){
 		future = new Cube(current);
-		while(!current.isFirstLayerCrossSolved()){
-			if(!current.isFirstLayerEdgeCorrect() && current.isFirstLayerEdgesEasilyAvailable()){
+		while(!CubeUtilities.isFirstLayerCrossSolved(current)){
+			if(!CubeUtilities.isFirstLayerEdgeCorrect(current) && CubeUtilities.isFirstLayerEdgesEasilyAvailable(current)){
 				notifyMainThreadToast("first layer edges easily available");
 				if(current.getSquare(5,2,1) == 4 && current.getComplementaryEdgeColor(5,2,1) == current.getSquare(1,1,1)){
 					solveStep(1, CW);
@@ -455,7 +473,8 @@ public class RubiksAlgorithm extends AsyncTask<String, Integer, Void> {
 			} //end isEasilyAvailable
 			
 
-			if(!current.isFirstLayerEdgesEasilyAvailable() && !current.isFirstLayerCrossSolved()){
+			if(!CubeUtilities.isFirstLayerEdgesEasilyAvailable(current) &&
+                !CubeUtilities.isFirstLayerCrossSolved(current)){
 				notifyMainThreadToast("no first layer cross pieces easily available");
 				//checks if there is a white on the outer edge piece, and moves it up to the top
 				if(current.getSquare(0,1,2) == 4){
@@ -586,9 +605,9 @@ public class RubiksAlgorithm extends AsyncTask<String, Integer, Void> {
 		Log.e("secondLayer", "starting second layer");
 		//Setup, need to position sacrifice corner in the cube(1,2,0) area. Not necessary if firstLayer function does it.
 		notifyMainThreadToast("second layer not completed");
-		while(current.numSecondLayerCorrect() < 3){
+		while(CubeUtilities.numSecondLayerCorrect(current) < 3){
 
-			if(!current.isLeftEdgeCorrect() && current.isEdgesOnTopLayer()){ //Place the correct edge in if possible
+			if(!CubeUtilities.isLeftEdgeCorrect(current) && CubeUtilities.isEdgesOnTopLayer(current)){ //Place the correct edge in if possible
 				notifyMainThreadToast("edges on top layer, putting them in");
 				Log.e("secondLayer", "edges on top layer, putting them in");
 				if(current .getSquare(5,0,1) == 0 && current.getComplementaryEdgeColor(5, 0, 1) ==1){
@@ -626,10 +645,10 @@ public class RubiksAlgorithm extends AsyncTask<String, Integer, Void> {
 			}
 			notifyMainThreadToast("finished first if loop");
 			solveStep(CW);
-			if(!current.isFaceSolved(4)) solveStep(4, CW);
+			if(!CubeUtilities.isFaceSolved(current, 4)) solveStep(4, CW);
 			//end while EdgesOnTop loop
 
-			if(!current.isLeftEdgeCorrect() && !current.isEdgesOnTopLayer()){ //This is called when there are no edges on the top face. This pulls the edges out of the incorrect spot, enabling re-entrance of the above while loop.
+			if(!CubeUtilities.isLeftEdgeCorrect(current) && !CubeUtilities.isEdgesOnTopLayer(current)){ //This is called when there are no edges on the top face. This pulls the edges out of the incorrect spot, enabling re-entrance of the above while loop.
 				notifyMainThreadToast("no edges on top face as of now");
 				//					int colorA = current.getSquare(0,1,1);
 				//					int colorB = current.getSquare(1,1,1);
@@ -667,7 +686,7 @@ public class RubiksAlgorithm extends AsyncTask<String, Integer, Void> {
 				}
 
 			}
-			else if(!current.isEdgesOnTopLayer()){
+			else if(!CubeUtilities.isEdgesOnTopLayer(current)){
 				notifyMainThreadToast("bottom else if being called");
 				solveStep(CW);
 				solveStep(4, CW);
@@ -675,9 +694,9 @@ public class RubiksAlgorithm extends AsyncTask<String, Integer, Void> {
 		} //End while != 3 loop
 		notifyMainThreadToast("three edges in");
 
-		if(!current.isFaceSolved(4)){
+		if(!CubeUtilities.isFaceSolved(current, 4)){
 			//Position the sacrifice corner with the unsolved edge
-			while(current.isLeftEdgeCorrect()){
+			while(CubeUtilities.isLeftEdgeCorrect(current)){
 				solveStep(CW);
 				solveStep(4, CW);
 			}
@@ -764,7 +783,7 @@ public class RubiksAlgorithm extends AsyncTask<String, Integer, Void> {
 			else notifyMainThreadToast("error in correcting sacrifice corner");
 		}
 		//Place in the final edge
-		if(current.numSecondLayerCorrect() <= 3){
+		if(CubeUtilities.numSecondLayerCorrect(current) <= 3){
 			notifyMainThreadToast("placing in final edge");
 			int colorA = current.getSquare(0,1,1);
 			int colorB = current.getSquare(1,1,1);
@@ -829,7 +848,7 @@ public class RubiksAlgorithm extends AsyncTask<String, Integer, Void> {
 	 */
 	public  void topLayerCross(){
 		future = new Cube(current);
-		while(!current .isTopCrossSolved()){
+		while(!CubeUtilities.isTopCrossSolved(current )){
 			notifyMainThreadToast("Top Layer Cross not complete");
 			Log.e("topLayerCross", "top cross not solved, enter while loop");
 			//Position top face for algorithm use
@@ -883,7 +902,7 @@ public class RubiksAlgorithm extends AsyncTask<String, Integer, Void> {
 	 */
 	public  void topLayerCorners(){
 		future = new Cube(current);
-		while(!current .isTopCornersPermutated2()){
+		while(!CubeUtilities.isTopCornersPermutated2(current )){
 			Log.e("topLayerCorners" ,"top corners not permutated, inside while loop");
 			notifyMainThreadToast("Top Layer Corners Not Permutated");
 			int sameColorVal = 88; //Shared color value
@@ -1006,29 +1025,29 @@ public class RubiksAlgorithm extends AsyncTask<String, Integer, Void> {
 	 */
 	public void solveTopFace(){
 		future = new Cube(current);
-		while (!current .isFaceSolved(5)){
+		while (!CubeUtilities.isFaceSolved(current, 5)){
 			notifyMainThreadToast("Top Face Not Solved");
-			int numSquares = current.countSquaresOnFace(5); //Detect top face pattern
+			int numSquares = CubeUtilities.countSquaresOnFace(current, 5); //Detect top face pattern
 			if(numSquares == 6){ //"Fish" case pattern
 				//Position face properly
 				Log.e("solveTopFace", "6 squares on top");
-				if(current .countSquaresOnFace(5, 1) == 0) solveStep (5, CW);
-				else if (current.countSquaresOnFace(5, 3) == 0) solveStep(5, CCW);
-				else if (current.countSquaresOnFace(5, 2) == 0){
+				if(CubeUtilities.countSquaresOnFace(current, 5, 1) == 0) solveStep (5, CW);
+				else if (CubeUtilities.countSquaresOnFace(current, 5, 3) == 0) solveStep(5, CCW);
+				else if (CubeUtilities.countSquaresOnFace(current, 5, 2) == 0){
 					solveStep(CW);
 					solveStep(CW);
 				}
 
 				//Perform Algorithm
-				if(current .getSquare(1, 0, 0) == 5) solveTopFaceHelper(CCW);
+				if(current.getSquare(1, 0, 0) == 5) solveTopFaceHelper(CCW);
 				else solveTopFaceHelper( CW);
 			}
 			else if (numSquares == 5){
 				Log.e("solveTopFace", "5 squares on top");
 				//Position face properly
-				if(current .countSquaresOnFace(5, 1) == 2) solveStep (5, CW);
-				else if (current.countSquaresOnFace(5, 3) == 2) solveStep(5, CCW);
-				else if (current.countSquaresOnFace(5, 2) == 2){
+				if(CubeUtilities.countSquaresOnFace(current , 5, 1) == 2) solveStep (5, CW);
+				else if (CubeUtilities.countSquaresOnFace(current, 5, 3) == 2) solveStep(5, CCW);
+				else if (CubeUtilities.countSquaresOnFace(current, 5, 2) == 2){
 					solveStep(CW);
 					solveStep(CW);
 				}
@@ -1061,7 +1080,7 @@ public class RubiksAlgorithm extends AsyncTask<String, Integer, Void> {
 		future = new Cube(current);
 
 
-		while(!current.isSolved()){
+		while(!CubeUtilities.isSolved(current)){
 			Log.e("current isn't solved", "while loop - started");
 			notifyMainThreadToast("Top Layer Edges Not Solved");
 

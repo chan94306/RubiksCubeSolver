@@ -37,7 +37,6 @@ public class Cube implements Cloneable{
 
 	private int leftColor , frontColor , rightColor , backColor , topColor , bottomColor = 0;
 	private int [] RGBColors = {leftColor , frontColor , rightColor , backColor , topColor, bottomColor};
-	private int algorithmCounter = 0;
 	public static final boolean CW = true; //Clockwise
 	public static final boolean CCW = false; //Counterclockwise
 
@@ -71,11 +70,6 @@ public class Cube implements Cloneable{
 		this.RGBColors = RGBColors;
 	}
 
-	
-	public Cube clone(){
-		return new Cube(cube, RGBColors);
-	}
-	
 	// Copy constructor
 	public Cube(Cube c){
 		for(int f = 0; f<6; f++){
@@ -88,6 +82,7 @@ public class Cube implements Cloneable{
 			setColorValue(f, getColorValue(f));
 		}
 		colorMap = new HashMap<Integer, Integer>(c.colorMap);
+		faceMap = new HashMap<Integer, Integer>(c.faceMap);
 	}
 	
 	/**
@@ -215,19 +210,6 @@ public class Cube implements Cloneable{
 		}
 		return true;
 	}
-
-	public void clone(Cube c){
-		for(int f = 0; f<6; f++){
-			for(int i = 0; i <3; i++){
-				for(int j = 0; j<3; j++){
-					cube[f][i][j] = c.getSquare(f, i, j);
-
-				}
-			}
-			RGBColors[f] = c.getColorValue(f);
-		}
-	}
-
 
 	/**
 	 * Populates a 6x3x3 array of a completely solved Rubik's Cube.
@@ -575,339 +557,7 @@ public class Cube implements Cloneable{
 // Just Algorithm Things
 	/*-------------------------------------------------------------------------------------------------------------------------*/
 
-	/**
-	 * Returns the future/ideal cube after one step of the algorithm.
-	 *
-	 *
-	 * @return the future cube after one step of the algorithm is implemented
-	 * @deprecated
-	 */
-	public int [][][] nextStep (){
-		boolean algStarted = false;
-
-		//Rotate the cube so that the blank face is on the left
-		if(cube [1][0][1] == 1 && !algStarted){ // CHANGE TO FACE IS EMPTY
-			rotateCube( CW);
-			return cube ;
-		}
-		else if (cube [3][0][1] == 3 && !algStarted){
-			rotateCube( CCW);
-			return cube ;
-		}
-		//Algorithm for edge switching
-		else if (cube [2][0][1] == 1 || cube[2][0][1] == 0 || algStarted){
-			boolean adjColMatch = true;
-			if(cube [2][0][1] == 3) adjColMatch = false;
-			algStarted = true;
-			switch(algorithmCounter ){
-			case 0: rotateSide(2, CCW ); break;
-			case 1: rotateSide(2, CCW ); break;
-			case 2:
-				if(adjColMatch) rotateSide(5, CW );
-				else rotateSide(5, CCW ); break;
-			case 3: rotateCube(CCW ); break;
-			case 4: rotateSide(6, CCW ); break;
-			case 5: rotateSide(5, CW ); break;
-			case 6: rotateSide(5, CW ); break;
-			case 7: rotateSide(6, CW ); break;
-			case 8:
-				if(adjColMatch) rotateSide(5, CW );
-				else rotateSide(5, CCW ); break;
-			case 9: rotateCube(CW ); break;
-			case 10: rotateSide(2, CW ); break;
-			case 11: rotateSide(2, CW ); break;
-			default: algorithmCounter = -1;
-			algStarted = false;
-			break;
-			}
-			algorithmCounter++;
-			return cube ;
-		}
-		else return cube ;
-	}
-
-	/**
-	 * Counts the number of squares with the color of the face (center piece).
-	 *
-	 *
-	 * @param face the face of interest (0 through 5)
-	 * @return the number of squares with the color of the center piece of the specified face.
-	 */
-	public int countSquaresOnFace(int face){
-		int counter = 0;
-		for(int i = 0; i <3; i++){
-			for(int j = 0; j<3; j++){
-				if(cube [face][i][j] == cube[face][1][1]) counter++;
-			}
-		}
-		return counter;
-	}
-
-	/**
-	 * Counts the number of squares of a specified color on a specified face.
-	 *
-	 *
-	 * @param squareColor the color of the squares to be counted, (0 through 5)
-	 * @param face the face of the cube where squares will be counted (0 through 5).
-	 * @return the number of squares with the specified squareColor on the specified face.
-	 */
-	public int countSquaresOnFace(int squareColor, int face){
-		int counter = 0;
-		for(int i = 0; i <3; i++){
-			for(int j = 0; j<3; j++){
-				if(cube [face][i][j] == squareColor) counter++;
-			}
-		}
-		return counter;
-	}
-
-	/**
-	 * Checks if one particular face has all 9 of its colors.
-	 *
-	 *
-	 * @param face the face of interest, 0 through 5.
-	 * @return true if the face has all 9 of its colors, otherwise false
-	 */
-	public boolean isFaceSolved(int face){
-		if(countSquaresOnFace(face) == 9) return true;
-		else return false;
-	}
-
-	/**
-	 * Checks if the entire cube is solved. Utilizes isFaceSolved on all 6 faces.
-	 *
-	 *
-	 * @return true if the entire cube is solved, false otherwise.
-	 */
-	public boolean isSolved(){
-		int counter = 0;
-		for(int i = 0; i <6; i++){
-			if(isFaceSolved(i)) counter++;
-		}
-		if(counter == 6) return true;
-		else return false;
-	}
-
-	/**
-	 * Checks if the top layer corners are in the proper position/order.
-	 *
-	 *
-	 * @return true if the top layer corners are in the right order.
-	 * @see isTopCornersPermutated2
-	 * @deprecated
-	 */
-	public boolean isTopCornersPermutated (){
-		int counter = 0;
-		if(cube [5][2][0] == 0 || cube[5][2][0] == 1) counter++;
-		if(cube [0][0][2] == 0 || cube[0][0][2] == 1) counter++;
-		if(cube [1][0][0] == 0 || cube[1][0][0] == 1) counter++;
-        // at the end of this block, counter should be incremented twice
-
-		if(cube [5][2][2] == 2 || cube[5][2][2] == 1) counter++;
-		if(cube [2][0][0] == 2 || cube[2][0][0] == 1) counter++;
-		if(cube [1][0][2] == 2 || cube[1][0][2] == 1) counter++;
-
-		if(cube [5][0][0] == 0 || cube[5][0][0] == 3) counter++;
-		if(cube [0][0][0] == 0 || cube[0][0][0] == 3) counter++;
-		if(cube [3][0][2] == 0 || cube[3][0][2] == 3) counter++;
-
-		if(cube [5][0][2] == 2 || cube[5][0][2] == 3) counter++;
-		if(cube [3][0][0] == 2 || cube[3][0][0] == 3) counter++;
-		if(cube [2][0][2] == 2 || cube[2][0][2] == 3) counter++;
-
-
-		if(counter == 8) return true;
-		else return false;
-	}
-
-	/**
-	 * Checks if the top layer corners are in the proper position/order.
-	 * First, the two left corners on the top layer are compared, and if they share a similar color, then check if the
-	 * bottom left corner is properly ordered relative to the top left corner. Then proceed to the bottom right corner and
-	 * check if it is properly ordered relative to the bottom left, then top right, then top left, etc.
-	 *
-	 *
-	 * @return true if all 4 corners in the top layer are properly ordered. false otherwise.
-	 */
-	public boolean isTopCornersPermutated2(){
-		int counter = 0;
-		int sameColorVal = 88; //Shared color value
-		int diffColorVal = 88;
-
-        // TODO: do this with a set
-		if(cube [1][0][0] == cube[0][0][0] && cube[1][0][0] != 5){
-			counter++;
-			sameColorVal = cube[1][0][0];
-		}
-		if(cube [1][0][0] == cube[5][0][0] && cube[1][0][0] != 5){
-			counter++;
-			sameColorVal = cube[1][0][0];
-		}
-		if(cube [1][0][0] == cube[3][0][2] && cube[1][0][0] != 5){
-			counter++;
-			sameColorVal = cube[1][0][0];
-		}
-		if(cube [0][0][2] == cube[0][0][0] && cube[0][0][2] != 5){
-			counter++;
-			sameColorVal = cube[0][0][2];
-		}
-		if(cube [0][0][2] == cube[5][0][0] && cube[0][0][2] != 5){
-			counter++;
-			sameColorVal = cube[0][0][2];
-		}
-		if(cube [0][0][2] == cube[3][0][2] && cube[0][0][2] != 5){
-			counter++;
-			sameColorVal = cube[0][0][2];
-		}
-		if(cube [5][2][0] == cube[0][0][0] && cube[5][2][0] != 5){
-			counter++;
-			sameColorVal = cube[5][2][0];
-		}
-		if(cube [5][2][0] == cube[5][0][0] && cube[5][2][0] != 5){
-			counter++;
-			sameColorVal = cube[5][2][0];
-		}
-		if(cube [5][2][0] == cube[3][0][2] && cube[5][2][0] != 5){
-			counter++;
-			sameColorVal = cube[5][2][0];
-		}
-
-		if(counter == 1){
-            // change to just grab opposite value
-			if(cube [1][0][0] != 5 && cube[1][0][0] != sameColorVal) diffColorVal = cube[1][0][0];
-			else if (cube [0][0][2] != 5 && cube[0][0][2] != sameColorVal) diffColorVal = cube[0][0][2];
-			else if (cube [5][2][0] != 5 && cube[5][2][0] != sameColorVal) diffColorVal = cube[5][2][0];
-
-			if(sameColorVal+1 == diffColorVal || sameColorVal-3 == diffColorVal){ //Checks if diffColorVal is to the right of sameColorVal
-				counter++;
-				sameColorVal = diffColorVal;
-				if(cube [1][0][2] != 5 && cube[1][0][2] !=sameColorVal) diffColorVal=cube[1][0][2];
-				else if (cube [5][2][2] != 5 && cube[5][2][2] !=sameColorVal) diffColorVal=cube [5][2][2];
-				else if (cube [2][0][0] != 5 && cube[2][0][0] !=sameColorVal) diffColorVal=cube [2][0][0];                          
-
-				if(sameColorVal+1 == diffColorVal || sameColorVal-3 == diffColorVal){
-					counter++;
-					sameColorVal = diffColorVal;
-					if(cube [2][0][2] != 5 && cube[2][0][2] !=sameColorVal) diffColorVal=cube [2][0][2];
-					else if (cube [5][0][2] != 5 && cube[5][0][2] !=sameColorVal) diffColorVal=cube [5][0][2];
-					else if (cube [3][0][0] != 5 && cube[3][0][0] !=sameColorVal) diffColorVal=cube [3][0][0];                          
-
-					if(sameColorVal+1 == diffColorVal || sameColorVal-3 == diffColorVal){
-						counter++;
-						sameColorVal = diffColorVal;
-						if(cube [3][0][2] != 5 && cube[3][0][2] !=sameColorVal) diffColorVal=cube [3][0][2];
-						else if (cube [0][0][0] != 5 && cube[0][0][0] !=sameColorVal) diffColorVal=cube [0][0][0];
-						else if (cube [5][0][0] != 5 && cube[5][0][0] !=sameColorVal) diffColorVal=cube [5][0][0];
-
-						if(sameColorVal+1 == diffColorVal || sameColorVal-3 == diffColorVal){
-							counter++;
-						}
-					}
-				}
-			}
-		}
-		return (counter == 5);
-	}
-
-	/**
-	 * Checks to see if a "cross" is present on the top layer.
-	 *
-	 *
-	 * @return true if a "cross" shape is present on the top face, false otherwise.
-	 */
-	public boolean isTopCrossSolved(){
-		int counter = 0;
-		if(cube [5][0][1] == 5) counter++;
-		if(cube [5][1][0] == 5) counter++;
-		if(cube [5][1][2] == 5) counter++;
-		if(cube [5][2][1] == 5) counter++;
-		return (counter==4);
-	}
-
-	/**
-	 * Returns the number of edge pieces that are in the proper position in the second layer. Relies on center pieces only.
-	 *
-	 *
-	 * @return an int value that should be between 0 and 4 of the number of edge pieces in the proper position in the second layer.
-	 */
-	public int numSecondLayerCorrect(){
-		int counter = 0;
-		if(cube [0][1][0] == 0 && cube [3][1][2] == 3) counter++;
-		if(cube [0][1][2] == 0 && cube [1][1][0] == 1) counter++;
-		if(cube [1][1][2] == 1 && cube [2][1][0] == 2) counter++;
-		if(cube [2][1][2] == 2 && cube [3][1][0] == 3) counter++;
-		return counter;
-	}
-
-	/**
-	 * Checks if there are non -top face edge pieces on the top layer. For second layer solving usage
-	 *
-     * TODO: rename to, are second layer edges easily available on the top layer
-	 * @return true if there are available edge pieces on the top layer, false otherwise.
-	 */
-	public boolean isEdgesOnTopLayer(){
-		int counter = 0;
-		if(cube [5][0][1] !=5 && getComplementaryEdgeColor(5,0,1) != 5) counter++;
-		if(cube [5][1][0] !=5 && getComplementaryEdgeColor(5,1,0) != 5) counter++;
-		if(cube [5][1][2] !=5 && getComplementaryEdgeColor(5,1,2) != 5) counter++;
-		if(cube [5][2][1] !=5 && getComplementaryEdgeColor(5,2,1) != 5) counter++;
-		return (counter > 0);
-	}
-
-	/**
-	 * Checks if the left edge of the front face has its second layer edge piece in the correct position.
-	 *
-	 * @return true if the left edge is correctly positioned, false otherwise.
-	 */
-	public boolean isLeftEdgeCorrect(){
-		return (cube [0][1][2] == 0 && cube[1][1][0] == 1);
-	}
-
-	//For usage in solving first layer corners
-	public boolean isLeftBottomCornerCorrect(){
-		return (cube [0][2][2] == 0 && cube[1][2][0] == 1 && cube[4][0][0] == 4);
-	}
-
-	public int numFirstLayerCornersCorrect(){
-		int counter = 0;
-		if(cube [0][2][2] == cube[0][1][1] && cube[1][2][0] == cube[1][1][1] && cube[4][0][0] == 4) counter++;
-		if(cube [1][2][2] == cube[1][1][1] && cube[2][2][0] == cube[2][1][1] && cube[4][0][2] == 4) counter++;
-		if(cube [2][2][2] == cube[2][1][1] && cube[3][2][0] == cube[3][1][1] && cube[4][2][2] == 4) counter++;
-		if(cube [3][2][2] == cube[3][1][1] && cube[0][2][0] == cube[0][1][1] && cube[4][2][0] == 4) counter++;
-		return counter;
-	}
-
-	//for first layer solving
-	public boolean isCornersOnTopLayer(){
-		if(countSquaresOnFace(4, 5) > 1) return true;
-		for(int i = 0; i <3; i++){
-			if(cube[i][0][0] == 4 || cube[i][0][2] == 4) return true;
-		}
-		return false;
-	}
-
-	public boolean isFirstLayerCrossSolved(){
-		int counter = 0;
-		if(cube [4][0][1] == 4 && cube[1][2][1] == cube[1][1][1]) counter++;
-		if(cube [4][1][0] == 4 && cube[0][2][1] == cube[0][1][1]) counter++;
-		if(cube [4][1][2] == 4 && cube[2][2][1] == cube[2][1][1]) counter++;
-		if(cube [4][2][1] == 4 && cube[3][2][1] == cube[3][1][1]) counter++;
-		return (counter==4);
-	}
-
-	public boolean isFirstLayerEdgeCorrect(){
-		return (cube[4][0][1] == 4 && cube[1][2][1] == 1);
-	}
-
-	public boolean isFirstLayerEdgesEasilyAvailable(){
-		if(cube[5][0][1] == 4 || cube[5][1][0] == 4 || cube[5][1][2] == 4 || cube[5][2][1] == 4) return true;
-		if(cube[0][1][2] == 4 || cube[2][1][0] == 4) return true;
-		// 	for(int i = 0; i <3; i++){
-		// 	if(cube[i][1][0] == 4 || cube[i][1][2] == 4) return true;
-		// }
-		else return false;		
-
-	}
+	
 
 
 	/*-------------------------------------------------------------------------------------------------------------------------*/
@@ -1013,131 +663,6 @@ public class Cube implements Cloneable{
 		return RGBColors [face];
 	}
 
-	/**
-	 * Returns the color of the other side of an edge piece. Only works for the top layer (face = 5)
-	 * @param face The face of interest. For purposes of this function, face always = 5
-	 * @param i The integer value 0 through 2 of [i][j] in a 2D array (y value)
-	 * @param j The integer value 0 through 2 of [i][j] in a 2D array (x value)
-	 * @return Returns the integer representation for the color value on the other side of the edge piece.
-	 */
-	public int getComplementaryEdgeColor(int face, int i, int j){
-		if(face == 5 && i == 2 && j == 1) return cube[1][0][1];
-		if(face == 5 && i == 1 && j == 0) return cube[0][0][1];
-		if(face == 5 && i == 1 && j == 2) return cube[2][0][1];
-		if(face == 5 && i == 0 && j == 1) return cube[3][0][1];
-
-		//face 1
-		if(face == 1 && i == 2 && j == 1) return cube[4][0][1]; //technically not needed
-		if(face == 1 && i == 1 && j == 0) return cube[0][1][1];
-		if(face == 1 && i == 1 && j == 2) return cube[2][1][1];
-		if(face == 1 && i == 0 && j == 1) return cube[5][2][1];
-
-		
-
-
-
-		else return 88;
-	}
-
-	/**
-	 * Checks to see if two colors are on the same edge piece, when specified a specific square on the cube.
-	 * Only works for the top layer (face 5) and edges on the front layer.
-	 * @param face integer value 0 through 5 of the face the square is on
-	 * @param i integer value, 0 through 2, [i][j] of a 2D array (y value)
-	 * @param j integer value, 0 through 2, [i][j] of a 2D array (x value)
-	 * @param colorA integer value 0 through 5 of one of the colors on the edge piece.
-	 * @param colorB integer value 0 through 5 of the other color on the edge piece.
-	 * @return true if the two specified colors are on the edge piece indicated, false otherwise.
-	 */
-	public boolean areComplementaryCornerColors(int face, int i, int j, int colorA, int colorB){
-		int[] Colors = new int[2];
-		//Assuming face 4 on the top face
-		if(face ==5 && i == 0 && j == 0){
-			Colors[0] = cube[0][0][0];
-			Colors[1] = cube[3][0][2];
-		}
-		else if(face ==5 && i == 0 && j == 2){
-			Colors[0] = cube[3][0][0];
-			Colors[1] = cube[2][0][2];
-		}
-		else if(face ==5 && i == 2 && j == 2){
-			Colors[0] = cube[2][0][0];
-			Colors[1] = cube[1][0][2];
-		}
-		else if(face ==5 && i == 2 && j == 0){
-			Colors[0] = cube[1][0][0];
-			Colors[1] = cube[0][0][2];
-		}
-		//Assuming face 4 is on the 0,0 face
-		else if(face == 0 && i == 0 && j == 0){
-			Colors[0] = cube[3][0][2];
-			Colors[1] = cube[5][0][0];
-		}
-		else if(face == 1 && i == 0 && j == 0){
-			Colors[0] = cube[0][0][2];
-			Colors[1] = cube[5][2][0];
-		}
-		else if(face == 2 && i == 0 && j == 0){
-			Colors[0] = cube[1][0][2];
-			Colors[1] = cube[5][2][2];
-		}
-		else if(face == 3 && i == 0 && j == 0){
-			Colors[0] = cube[2][0][2];
-			Colors[1] = cube[5][0][2];
-		}
-		//Assuming face 4 is on the 0,2 face
-		else if(face == 0 && i == 0 && j == 2){
-			Colors[0] = cube[1][0][0];
-			Colors[1] = cube[5][2][0];
-		}
-		else if(face == 1 && i == 0 && j == 2){
-			Colors[0] = cube[2][0][0];
-			Colors[1] = cube[5][2][2];
-		}
-		else if(face == 2 && i == 0 && j == 2){
-			Colors[0] = cube[5][0][2];
-			Colors[1] = cube[3][0][0];
-		}
-		else if(face == 3 && i == 0 && j == 2){
-			Colors[0] = cube[0][0][0];
-			Colors[1] = cube[5][0][0];
-		}
-
-		//for first layer
-		else if(face == 0 && i == 2 && j ==2){
-			Colors[0] = cube[1][2][0];
-			Colors[1] = cube[4][0][0];
-		}
-		else if(face == 1 && i == 2 && j==0){
-			Colors[0] = cube[0][2][2];
-			Colors[1] = cube[4][0][0];
-		}
-
-		if((colorA == Colors[0] || colorA == Colors[1]) && (colorB == Colors[0] || colorB == Colors[1])) return true;
-		else return false;
-
-	}
-	
-	/**
-	 * Checks if the newly read cube is valid (has 9 of each color)
-	 * @return true if the cube has 9 of each color, false otherwise
-	 */
-	public boolean isValidCube(){
-		int[] bins = new int[6];
-		for(int f = 0; f<6; f++){
-			for(int i = 0; i<3; i++){
-				for(int j = 0 ; j<3; j++){
-					bins[getSquare(f, i, j)]++;
-				}
-			}
-		}
-		
-		for(int i = 0; i < bins.length; i++){
-			if(bins[i] != 9) return false;
-		}
-		return true;
-		
-	}
 	
 	public void printCube(){
 		for(int i = 0; i<3; i++){
@@ -1150,5 +675,31 @@ public class Cube implements Cloneable{
 			System. out.println(" " + cube[4][i][0]+"" +cube [4][i][1]+""+ cube[4][i][2]);
 		}
 		System. out.println("\n" );
+	}
+	
+	/**
+	 * Returns the color of the other side of an edge piece. Only works for the top layer (face = 5)
+	 * @param face The face of interest. For purposes of this function, face always = 5
+	 * @param i The integer value 0 through 2 of [i][j] in a 2D array (y value)
+	 * @param j The integer value 0 through 2 of [i][j] in a 2D array (x value)
+	 * @return Returns the integer representation for the color value on the other side of the edge piece.
+	 */
+	public int getComplementaryEdgeColor(int face, int i, int j){
+		if(face == 5 && i == 2 && j == 1) return getSquare(1, 0, 1);
+		if(face == 5 && i == 1 && j == 0) return getSquare(0, 0, 1);
+		if(face == 5 && i == 1 && j == 2) return getSquare(2, 0, 1);
+		if(face == 5 && i == 0 && j == 1) return getSquare(3, 0, 1);
+
+		//face 1
+		if(face == 1 && i == 2 && j == 1) return getSquare(4, 0, 1); //technically not needed
+		if(face == 1 && i == 1 && j == 0) return getSquare(0, 1, 1);
+		if(face == 1 && i == 1 && j == 2) return getSquare(2, 1, 1);
+		if(face == 1 && i == 0 && j == 1) return getSquare(5, 2, 1);
+
+		
+
+
+
+		else return 88;
 	}
 }
